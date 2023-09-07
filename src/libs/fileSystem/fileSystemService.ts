@@ -14,9 +14,13 @@ export interface GetAllPathsFromDirectoryPayload {
   readonly directoryPath: string;
 }
 
-export interface RenamePathPayload {
+export interface MovePayload {
   readonly fromPath: string;
   readonly toPath: string;
+}
+
+export interface RemovePayload {
+  readonly path: string;
 }
 
 export interface FileSystemService {
@@ -24,5 +28,6 @@ export interface FileSystemService {
   checkIfPathIsFile(payload: CheckIfPathIsFilePayload): boolean;
   checkIfPathExists(payload: CheckIfPathExistsPayload): boolean;
   getAllPathsFromDirectory(payload: GetAllPathsFromDirectoryPayload): Promise<string[]>;
-  renamePath(payload: RenamePathPayload): Promise<void>;
+  move(payload: MovePayload): Promise<void>;
+  remove(payload: RemovePayload): Promise<void>;
 }

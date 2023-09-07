@@ -1,10 +1,7 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { FileSystemServiceImpl } from '../libs/fileSystem/fileSystemServiceImpl.js';
-import {
-  CountLinesOfCodeCommandHandlerImpl,
-  ReplaceAllInPathNamesCommandHandlerImpl,
-} from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandlerImpl.js';
+import { ReplaceAllInPathNamesCommandHandlerImpl } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandlerImpl.js';
 import { BaseError } from './errors/baseError.js';
 
 export class Application {
@@ -27,12 +24,12 @@ export class Application {
 
           const commandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(fileSystemService);
 
-          let programmingLanguageNamesToFilesInfo;
+          let changedPathsToNewPathsMapping;
 
           try {
-            const result = await commandHandler.execute({ inputPath, excludePaths });
+            const result = await commandHandler.execute({ inputPath, replaceFrom, replaceTo, excludePaths });
 
-            programmingLanguageNamesToFilesInfo = result.programmingLanguageNamesToFilesInfo;
+            changedPathsToNewPathsMapping = result.changedPathNames;
           } catch (error) {
             if (error instanceof BaseError) {
               console.error({ errorMessage: error.message, errorContext: error.context });
@@ -43,7 +40,7 @@ export class Application {
             return;
           }
 
-          console.log(result.toString());
+          console.log(changedPathsToNewPathsMapping.toString());
         },
       )
       .positional('input', {

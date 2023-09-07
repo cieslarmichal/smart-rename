@@ -4,11 +4,13 @@ import {
   CheckIfPathIsFilePayload,
   FileSystemService,
   GetAllPathsFromDirectoryPayload,
-  RenamePathPayload,
+  MovePayload,
+  RemovePayload,
 } from './fileSystemService.js';
 import { existsSync, lstatSync } from 'fs';
-import { readdir, rename } from 'node:fs/promises';
+import { readdir, rm } from 'node:fs/promises';
 import { join } from 'path';
+import { move as asyncMove } from 'fs-extra';
 
 export class FileSystemServiceImpl implements FileSystemService {
   public checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): boolean {
@@ -36,14 +38,18 @@ export class FileSystemServiceImpl implements FileSystemService {
 
     const absolutePaths = relativePaths.map((relativePath) => join(directoryPath, relativePath));
 
-    const absoluteFilePaths = absolutePaths.filter((absolutePath) => this.checkIfPathIsFile({ path: absolutePath }));
-
-    return absoluteFilePaths;
+    return absolutePaths;
   }
 
-  public async renamePath(payload: RenamePathPayload): Promise<void> {
+  public async move(payload: MovePayload): Promise<void> {
     const { fromPath, toPath } = payload;
 
-    await rename(fromPath, toPath);
+    await asyncMove(fromPath, toPath, { overwrite: false });
+  }
+
+  public async remove(payload: RemovePayload): Promise<void> {
+    const { path } = payload;
+
+    await rm(path, { recursive: true, force: true });
   }
 }

@@ -26,13 +26,41 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
 
     this.validateIfPathsExist({ inputPath, excludePaths });
 
-    const allFilesPaths = await this.getAllFilesPaths({ path: inputPath });
+    const allPaths = await this.getAllPaths({ path: inputPath });
 
-    const filteredFilePaths = allFilesPaths.filter(
+    const filteredPaths = allPaths.filter(
       (filePath) => excludePaths.find((excludePath) => filePath.includes(excludePath)) === undefined,
     );
 
-    return { programmingLanguageNamesToFilesInfo };
+    filteredPaths.sort((path1, path2) => {
+      if (path1.length < path2.length) {
+        return 1;
+      } else if (path1.length === path2.length) {
+        return 0;
+      } else {
+        return -1;
+      }
+    });
+
+    const changedPathNames = new Map<string, string>();
+
+    for (const path of filteredPaths) {
+      if (path.search(replaceFrom) === -1) {
+        continue;
+      }
+
+      const newPath = path.replaceAll(replaceFrom, replaceTo);
+
+      if (this.fileSystemService.checkIfPathExists({ path: newPath })) {
+        await this.fileSystemService.remove({ path });
+      } else {
+        await this.fileSystemService.move({ fromPath: path, toPath: newPath });
+      }
+
+      changedPathNames.set(path, newPath);
+    }
+
+    return { changedPathNames };
   }
 
   private validateIfPathsExist(payload: ValidateIfPathsExistPayload): void {
@@ -49,17 +77,17 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
     });
   }
 
-  private async getAllFilesPaths(payload: GetAllFilesPathsPayload): Promise<string[]> {
+  private async getAllPaths(payload: GetAllFilesPathsPayload): Promise<string[]> {
     const { path } = payload;
 
-    let filesPaths: string[];
+    let paths: string[];
 
     if (this.fileSystemService.checkIfPathIsDirectory({ path })) {
-      filesPaths = await this.fileSystemService.getAllPathNamesFromDirectory({ directoryPath: path });
+      paths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: path });
     } else {
-      filesPaths = [path];
+      paths = [path];
     }
 
-    return filesPaths;
+    return paths;
   }
 }

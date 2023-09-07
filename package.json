@@ -7,7 +7,10 @@
   "bin": {
     "rip": "bin/rip.js"
   },
-  "files": ["bin", "dist"],
+  "files": [
+    "bin",
+    "dist"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -17,12 +20,12 @@
     "url": "https://github.com/cieslarmichal/replace-in-paths/issues"
   },
   "keywords": [
-     "replace all",
-     "rename files",
-     "rename directories",
-     "filesystem",
-     "cli"
-    ],
+    "replace all",
+    "rename files",
+    "rename directories",
+    "filesystem",
+    "cli"
+  ],
   "scripts": {
     "build:clean": "rimraf dist",
     "build": "tsc --build tsconfig.build.json",
@@ -31,12 +34,14 @@
     "test:integration": "vitest .integration.test.ts --threads false"
   },
   "dependencies": {
+    "fs-extra": "^11.1.1",
     "tslib": "^2.6.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/yargs": "^17.0.24",
+    "@types/fs-extra": "^11.0.1",
     "@types/node": "^20.4.1",
+    "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "esbuild": "^0.18.11",
