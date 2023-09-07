@@ -1,5 +1,16 @@
+export type PathSource = {
+  type: 'path';
+  path: string;
+};
+
+export type GitSource = {
+  type: 'git';
+};
+
+export type DataSource = PathSource | GitSource;
+
 export interface ReplaceAllInPathNamesCommandHandlerPayload {
-  readonly inputPath: string;
+  readonly dataSource: DataSource;
   readonly replaceFrom: string;
   readonly replaceTo: string;
   readonly excludePaths?: string[];

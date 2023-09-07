@@ -22,7 +22,7 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
   public async execute(
     payload: ReplaceAllInPathNamesCommandHandlerPayload,
   ): Promise<ReplaceAllInPathNamesCommandHandlerResult> {
-    const { inputPath, replaceFrom, replaceTo, excludePaths = [] } = payload;
+    const { dataSource, replaceFrom, replaceTo, excludePaths = [] } = payload;
 
     this.validateIfPathsExist({ inputPath, excludePaths });
 

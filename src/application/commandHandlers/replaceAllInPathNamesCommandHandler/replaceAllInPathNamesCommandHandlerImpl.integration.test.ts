@@ -22,18 +22,22 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
     await mkdir(testDataDirectory);
 
     const userModuleDirectory = join(testDataDirectory, 'userModule');
+    const orderModuleDirectory = join(testDataDirectory, 'orderModule');
     const userRepositoriesDirectory = join(userModuleDirectory, 'repositories');
     const userRepositoryDirectory = join(userRepositoriesDirectory, 'userRepository');
     const userServicesDirectory = join(userModuleDirectory, 'services');
     const userServiceDirectory = join(userServicesDirectory, 'userService');
+    const hashServiceDirectory = join(userServicesDirectory, 'hashService');
     const userDomainDirectory = join(userModuleDirectory, 'domain');
     const userDirectory = join(userDomainDirectory, 'user');
 
     await mkdir(userModuleDirectory);
+    await mkdir(orderModuleDirectory);
     await mkdir(userRepositoriesDirectory);
     await mkdir(userRepositoryDirectory);
     await mkdir(userServicesDirectory);
     await mkdir(userServiceDirectory);
+    await mkdir(hashServiceDirectory);
     await mkdir(userDomainDirectory);
     await mkdir(userDirectory);
 
@@ -42,6 +46,8 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
     await writeFile(join(userRepositoryDirectory, 'userRepositoryImpl.ts'), 'test');
     await writeFile(join(userServiceDirectory, 'userService.ts'), 'test');
     await writeFile(join(userServiceDirectory, 'userSerivceImpl.ts'), 'test');
+    await writeFile(join(hashServiceDirectory, 'hashService.ts'), 'test');
+    await writeFile(join(hashServiceDirectory, 'hashSerivceImpl.ts'), 'test');
     await writeFile(join(userDirectory, 'user.ts'), 'test');
   });
 

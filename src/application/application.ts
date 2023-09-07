@@ -3,16 +3,17 @@ import { hideBin } from 'yargs/helpers';
 import { FileSystemServiceImpl } from '../libs/fileSystem/fileSystemServiceImpl.js';
 import { ReplaceAllInPathNamesCommandHandlerImpl } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandlerImpl.js';
 import { BaseError } from './errors/baseError.js';
+import { DataSource } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandler.js';
 
 export class Application {
   public start(): void {
     yargs(hideBin(process.argv))
       .command(
-        '$0 <input>',
+        '$0 <source>',
         'Replace all in paths names recursively.',
         () => {},
         async (argv) => {
-          const inputPath = argv['input'] as string;
+          const source = argv['source'] as string;
 
           const replaceFrom = argv['from'] as string;
 
@@ -27,7 +28,15 @@ export class Application {
           let changedPathsToNewPathsMapping;
 
           try {
-            const result = await commandHandler.execute({ inputPath, replaceFrom, replaceTo, excludePaths });
+            let dataSource: DataSource;
+
+            if (source === 'git') {
+              dataSource = { type: 'git' };
+            } else {
+              dataSource = { type: 'path', path: source };
+            }
+
+            const result = await commandHandler.execute({ dataSource, replaceFrom, replaceTo, excludePaths });
 
             changedPathsToNewPathsMapping = result.changedPathNames;
           } catch (error) {
@@ -43,10 +52,10 @@ export class Application {
           console.log(changedPathsToNewPathsMapping.toString());
         },
       )
-      .positional('input', {
-        describe: 'Directory/file path name to search for occurences and replace all',
+      .positional('source', {
+        describe: `Directory path or 'git' (git staged files) to search for occurences and replace all`,
         type: 'string',
-        demandOption: true,
+        demandOption: false,
       })
       .option('from', {
         describe: 'Rename from',
