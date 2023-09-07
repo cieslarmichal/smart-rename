@@ -10,7 +10,6 @@ npm i -g replace-all-in-paths
 
 ## Example
 
-
 ## Flags
 
 ```
@@ -21,7 +20,7 @@ Positionals:
 
 Flags:
   -e, --exclude  Directories/files names to be excluded from search
-  -f, --from     Rename from
-  -t, --to       Rename to
+  --from     Rename from
+  --to       Rename to
       --help     Show help
 ```

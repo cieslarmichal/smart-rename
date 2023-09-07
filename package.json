@@ -1,20 +1,20 @@
 {
-  "name": "replace-all-in-paths",
+  "name": "replace-in-paths",
   "version": "1.0.8",
   "author": "Michal Cieslar",
   "type": "module",
   "main": "dist/src/index.ts",
   "bin": {
-    "raip": "bin/raip.js"
+    "rip": "bin/rip.js"
   },
   "files": ["bin", "dist"],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cieslarmichal/replace-all-in-paths.git"
+    "url": "https://github.com/cieslarmichal/replace-in-paths.git"
   },
   "bugs": {
-    "url": "https://github.com/cieslarmichal/replace-all-in-paths/issues"
+    "url": "https://github.com/cieslarmichal/replace-in-paths/issues"
   },
   "keywords": [
      "replace all",
