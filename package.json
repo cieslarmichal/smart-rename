@@ -1,0 +1,62 @@
+{
+  "name": "replace-all-in-paths",
+  "version": "1.0.8",
+  "author": "Michal Cieslar",
+  "type": "module",
+  "main": "dist/src/index.ts",
+  "bin": {
+    "raip": "bin/raip.js"
+  },
+  "files": ["bin", "dist"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cieslarmichal/replace-all-in-paths.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cieslarmichal/replace-all-in-paths/issues"
+  },
+  "keywords": [
+     "replace all",
+     "rename files",
+     "rename directories",
+     "filesystem",
+     "cli"
+    ],
+  "scripts": {
+    "build:clean": "rimraf dist",
+    "build": "tsc --build tsconfig.build.json",
+    "build:dev": "tsc --build tsconfig.json",
+    "test:unit": "vitest .unit.test.ts --threads false",
+    "test:integration": "vitest .integration.test.ts --threads false"
+  },
+  "dependencies": {
+    "tslib": "^2.6.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.24",
+    "@types/node": "^20.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "esbuild": "^0.18.11",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6",
+    "vitest": "^0.33.0"
+  },
+  "volta": {
+    "node": "20.4.0",
+    "npm": "9.8.0"
+  },
+  "engines": {
+    "node": "=20.4.0",
+    "npm": "=9.8.0"
+  }
+}
