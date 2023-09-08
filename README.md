@@ -1,11 +1,11 @@
-# Replace all in paths
+# Rename paths
 
-A simple utility to quickly replace all occurrences in paths names.
+A simple utility to quickly replace all occurrences in path names.
 
 ## Installation
 
 ```
-npm i -g replace-all-in-paths
+npm i -g rename-paths
 ```
 
 ## Example
@@ -13,7 +13,7 @@ npm i -g replace-all-in-paths
 ## Flags
 
 ```
-raip <input>
+rps <input>
 
 Positionals:
   input  Directory/file path name to search for occurences and replace all

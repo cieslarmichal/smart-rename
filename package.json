@@ -1,11 +1,11 @@
 {
-  "name": "replace-in-paths",
+  "name": "rename-paths",
   "version": "1.0.8",
   "author": "Michal Cieslar",
   "type": "module",
   "main": "dist/src/index.ts",
   "bin": {
-    "rip": "bin/rip.js"
+    "rps": "bin/rps.js"
   },
   "files": [
     "bin",
@@ -14,15 +14,16 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cieslarmichal/replace-in-paths.git"
+    "url": "https://github.com/cieslarmichal/rename-paths.git"
   },
   "bugs": {
-    "url": "https://github.com/cieslarmichal/replace-in-paths/issues"
+    "url": "https://github.com/cieslarmichal/rename-paths/issues"
   },
   "keywords": [
     "replace all",
     "rename files",
     "rename directories",
+    "rename paths",
     "filesystem",
     "cli"
   ],
