@@ -30,6 +30,7 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
 
       if (await this.fileSystemService.checkIfPathIsDirectory({ path: absolutePath })) {
         allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: absolutePath });
+        allPaths.push(absolutePath);
       } else {
         allPaths = [absolutePath];
       }
