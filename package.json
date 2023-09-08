@@ -31,7 +31,6 @@
     "build:clean": "rimraf dist",
     "build": "tsc --build tsconfig.build.json",
     "build:dev": "tsc --build tsconfig.json",
-    "test:unit": "vitest .unit.test.ts --threads false",
     "test:integration": "vitest .integration.test.ts --threads false"
   },
   "dependencies": {
@@ -56,13 +55,5 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "vitest": "^0.33.0"
-  },
-  "volta": {
-    "node": "20.4.0",
-    "npm": "9.8.0"
-  },
-  "engines": {
-    "node": "=20.4.0",
-    "npm": "=9.8.0"
   }
 }
