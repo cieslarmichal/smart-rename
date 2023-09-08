@@ -1,4 +1,4 @@
-import { FileSystemService } from '../../../libs/fileSystem/fileSystemService.js';
+import { FileSystemService } from '../../services/fileSystemService/fileSystemService.js';
 import { ExcludePathNotExistsError } from '../../errors/excludePathNotExistsError.js';
 import { InputPathNotExistsError } from '../../errors/inputPathNotExistsError.js';
 import {

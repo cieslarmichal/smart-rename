@@ -1,12 +1,12 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { FileSystemServiceImpl } from '../libs/fileSystem/fileSystemServiceImpl.js';
 import { ReplaceAllInPathNamesCommandHandlerImpl } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandlerImpl.js';
 import { BaseError } from './errors/baseError.js';
 import {
   DataSource,
   DataSourceType,
 } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandler.js';
+import { FileSystemServiceImpl } from './services/fileSystemService/fileSystemServiceImpl.js';
 
 export class Application {
   public start(): void {

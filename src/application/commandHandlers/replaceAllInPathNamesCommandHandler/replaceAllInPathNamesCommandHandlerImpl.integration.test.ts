@@ -1,5 +1,4 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { FileSystemServiceImpl } from '../../../libs/fileSystem/fileSystemServiceImpl.js';
 import { ExcludePathNotExistsError } from '../../errors/excludePathNotExistsError.js';
 import { InputPathNotExistsError } from '../../errors/inputPathNotExistsError.js';
 import { join } from 'path';
@@ -7,6 +6,7 @@ import { ReplaceAllInPathNamesCommandHandlerImpl } from './replaceAllInPathNames
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { existsSync } from 'fs';
 import { DataSourceType } from './replaceAllInPathNamesCommandHandler.js';
+import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
 
 describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
   const fileSystemService = new FileSystemServiceImpl();
