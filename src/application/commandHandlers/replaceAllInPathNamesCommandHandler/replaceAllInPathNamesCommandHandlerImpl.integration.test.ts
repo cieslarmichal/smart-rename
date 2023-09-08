@@ -7,11 +7,20 @@ import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { existsSync } from 'fs';
 import { DataSourceType } from './replaceAllInPathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
+import { GitClientFactory } from '../../services/gitService/gitClient/gitClientFactory.js';
+import { GitServiceImpl } from '../../services/gitService/gitServiceImpl.js';
 
 describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
   const fileSystemService = new FileSystemServiceImpl();
 
-  const replaceAllInPathNamesCommandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(fileSystemService);
+  const gitClient = GitClientFactory.create();
+
+  const gitService = new GitServiceImpl(gitClient);
+
+  const replaceAllInPathNamesCommandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(
+    fileSystemService,
+    gitService,
+  );
 
   const testDataDirectory = join(__dirname, '..', '..', '..', '..', 'tests');
 

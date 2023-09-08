@@ -7,6 +7,7 @@ import {
   ReplaceAllInPathNamesCommandHandlerPayload,
 } from './replaceAllInPathNamesCommandHandler.js';
 import { resolve } from 'path';
+import { GitService } from '../../services/gitService/gitService.js';
 
 export interface ValidateIfPathsExistPayload {
   readonly inputPaths: string[];
@@ -14,14 +15,17 @@ export interface ValidateIfPathsExistPayload {
 }
 
 export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPathNamesCommandHandler {
-  public constructor(private readonly fileSystemService: FileSystemService) {}
+  public constructor(
+    private readonly fileSystemService: FileSystemService,
+    private readonly gitService: GitService,
+  ) {}
 
   public async execute(payload: ReplaceAllInPathNamesCommandHandlerPayload): Promise<void> {
     const { dataSource, replaceFrom, replaceTo, excludePaths = [] } = payload;
 
     const absoluteExcludePaths = excludePaths.map((excludePath) => resolve(excludePath));
 
-    let allPaths: string[];
+    let allPaths: string[] = [];
 
     if (dataSource.type === DataSourceType.path) {
       this.validateIfPathsExist({ inputPaths: [dataSource.path], excludePaths });
@@ -30,13 +34,17 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
 
       if (await this.fileSystemService.checkIfPathIsDirectory({ path: absolutePath })) {
         allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: absolutePath });
-        allPaths.push(absolutePath);
-      } else {
-        allPaths = [absolutePath];
       }
+
+      allPaths.push(absolutePath);
     } else {
-      // TODO: git staged files
-      allPaths = [];
+      const gitStagedPaths = await this.gitService.getStagedPaths();
+
+      const gitStagedExistingPaths = gitStagedPaths.filter((stagedPath) =>
+        this.fileSystemService.checkIfPathExists({ path: stagedPath }),
+      );
+
+      allPaths = gitStagedExistingPaths;
     }
 
     const filteredPaths = allPaths.filter(

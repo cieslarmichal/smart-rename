@@ -7,6 +7,8 @@ import {
   DataSourceType,
 } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from './services/fileSystemService/fileSystemServiceImpl.js';
+import { GitClientFactory } from './services/gitService/gitClient/gitClientFactory.js';
+import { GitServiceImpl } from './services/gitService/gitServiceImpl.js';
 
 export class Application {
   public start(): void {
@@ -26,7 +28,11 @@ export class Application {
 
           const fileSystemService = new FileSystemServiceImpl();
 
-          const commandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(fileSystemService);
+          const gitClient = GitClientFactory.create();
+
+          const gitService = new GitServiceImpl(gitClient);
+
+          const commandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(fileSystemService, gitService);
 
           try {
             let dataSource: DataSource;
