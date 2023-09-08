@@ -3,7 +3,10 @@ import { hideBin } from 'yargs/helpers';
 import { FileSystemServiceImpl } from '../libs/fileSystem/fileSystemServiceImpl.js';
 import { ReplaceAllInPathNamesCommandHandlerImpl } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandlerImpl.js';
 import { BaseError } from './errors/baseError.js';
-import { DataSource } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandler.js';
+import {
+  DataSource,
+  DataSourceType,
+} from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandler.js';
 
 export class Application {
   public start(): void {
@@ -31,9 +34,9 @@ export class Application {
             let dataSource: DataSource;
 
             if (source === 'git') {
-              dataSource = { type: 'git' };
+              dataSource = { type: DataSourceType.git };
             } else {
-              dataSource = { type: 'path', path: source };
+              dataSource = { type: DataSourceType.path, path: source };
             }
 
             const result = await commandHandler.execute({ dataSource, replaceFrom, replaceTo, excludePaths });

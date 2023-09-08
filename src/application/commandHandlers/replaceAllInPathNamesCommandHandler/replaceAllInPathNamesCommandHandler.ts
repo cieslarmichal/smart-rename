@@ -1,10 +1,15 @@
+export enum DataSourceType {
+  path = 'path',
+  git = 'git',
+}
+
 export type PathSource = {
-  type: 'path';
+  type: DataSourceType.path;
   path: string;
 };
 
 export type GitSource = {
-  type: 'git';
+  type: DataSourceType.git;
 };
 
 export type DataSource = PathSource | GitSource;
@@ -17,7 +22,7 @@ export interface ReplaceAllInPathNamesCommandHandlerPayload {
 }
 
 export interface ReplaceAllInPathNamesCommandHandlerResult {
-  readonly changedPathNames: Map<string, string>;
+  readonly changedPathNames: [string, string][];
 }
 
 export interface ReplaceAllInPathNamesCommandHandler {

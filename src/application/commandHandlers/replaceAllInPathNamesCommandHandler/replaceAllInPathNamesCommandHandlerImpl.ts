@@ -2,18 +2,15 @@ import { FileSystemService } from '../../../libs/fileSystem/fileSystemService.js
 import { ExcludePathNotExistsError } from '../../errors/excludePathNotExistsError.js';
 import { InputPathNotExistsError } from '../../errors/inputPathNotExistsError.js';
 import {
+  DataSourceType,
   ReplaceAllInPathNamesCommandHandler,
   ReplaceAllInPathNamesCommandHandlerPayload,
   ReplaceAllInPathNamesCommandHandlerResult,
 } from './replaceAllInPathNamesCommandHandler.js';
 
 export interface ValidateIfPathsExistPayload {
-  readonly inputPath: string;
+  readonly inputPaths: string[];
   readonly excludePaths: string[];
-}
-
-export interface GetAllFilesPathsPayload {
-  readonly path: string;
 }
 
 export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPathNamesCommandHandler {
@@ -24,9 +21,20 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
   ): Promise<ReplaceAllInPathNamesCommandHandlerResult> {
     const { dataSource, replaceFrom, replaceTo, excludePaths = [] } = payload;
 
-    this.validateIfPathsExist({ inputPath, excludePaths });
+    let allPaths: string[];
 
-    const allPaths = await this.getAllPaths({ path: inputPath });
+    if (dataSource.type === DataSourceType.path) {
+      this.validateIfPathsExist({ inputPaths: [dataSource.path], excludePaths });
+
+      if (this.fileSystemService.checkIfPathIsDirectory({ path: dataSource.path })) {
+        allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: dataSource.path });
+      } else {
+        allPaths = [dataSource.path];
+      }
+    } else {
+      // TODO: git staged files
+      allPaths = [];
+    }
 
     const filteredPaths = allPaths.filter(
       (filePath) => excludePaths.find((excludePath) => filePath.includes(excludePath)) === undefined,
@@ -42,7 +50,7 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
       }
     });
 
-    const changedPathNames = new Map<string, string>();
+    const changedPathNames: [string, string][] = [];
 
     for (const path of filteredPaths) {
       if (path.search(replaceFrom) === -1) {
@@ -57,37 +65,25 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
         await this.fileSystemService.move({ fromPath: path, toPath: newPath });
       }
 
-      changedPathNames.set(path, newPath);
+      changedPathNames.push([path, newPath]);
     }
 
     return { changedPathNames };
   }
 
   private validateIfPathsExist(payload: ValidateIfPathsExistPayload): void {
-    const { inputPath, excludePaths } = payload;
+    const { inputPaths, excludePaths } = payload;
 
-    if (!this.fileSystemService.checkIfPathExists({ path: inputPath })) {
-      throw new InputPathNotExistsError({ path: inputPath });
-    }
+    inputPaths.map((inputPath) => {
+      if (!this.fileSystemService.checkIfPathExists({ path: inputPath })) {
+        throw new InputPathNotExistsError({ path: inputPath });
+      }
+    });
 
     excludePaths.map((excludePath) => {
       if (!this.fileSystemService.checkIfPathExists({ path: excludePath })) {
         throw new ExcludePathNotExistsError({ path: excludePath });
       }
     });
-  }
-
-  private async getAllPaths(payload: GetAllFilesPathsPayload): Promise<string[]> {
-    const { path } = payload;
-
-    let paths: string[];
-
-    if (this.fileSystemService.checkIfPathIsDirectory({ path })) {
-      paths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: path });
-    } else {
-      paths = [path];
-    }
-
-    return paths;
   }
 }
