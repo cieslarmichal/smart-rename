@@ -21,10 +21,6 @@ export interface ReplaceAllInPathNamesCommandHandlerPayload {
   readonly excludePaths?: string[];
 }
 
-export interface ReplaceAllInPathNamesCommandHandlerResult {
-  readonly changedPathNames: [string, string][];
-}
-
 export interface ReplaceAllInPathNamesCommandHandler {
-  execute(payload: ReplaceAllInPathNamesCommandHandlerPayload): Promise<ReplaceAllInPathNamesCommandHandlerResult>;
+  execute(payload: ReplaceAllInPathNamesCommandHandlerPayload): Promise<void>;
 }

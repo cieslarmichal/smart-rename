@@ -13,7 +13,7 @@ export class Application {
     yargs(hideBin(process.argv))
       .command(
         '$0 <source>',
-        'Replace all in paths names recursively.',
+        'Replace all occurences in paths names.',
         () => {},
         async (argv) => {
           const source = argv['source'] as string;
@@ -28,8 +28,6 @@ export class Application {
 
           const commandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(fileSystemService);
 
-          let changedPathsToNewPathsMapping;
-
           try {
             let dataSource: DataSource;
 
@@ -39,9 +37,7 @@ export class Application {
               dataSource = { type: DataSourceType.path, path: source };
             }
 
-            const result = await commandHandler.execute({ dataSource, replaceFrom, replaceTo, excludePaths });
-
-            changedPathsToNewPathsMapping = result.changedPathNames;
+            await commandHandler.execute({ dataSource, replaceFrom, replaceTo, excludePaths });
           } catch (error) {
             if (error instanceof BaseError) {
               console.error({ errorMessage: error.message, errorContext: error.context });
@@ -51,14 +47,12 @@ export class Application {
 
             return;
           }
-
-          console.log(changedPathsToNewPathsMapping.toString());
         },
       )
       .positional('source', {
-        describe: `Directory path or 'git' (git staged files) to search for occurences and replace all`,
+        describe: `Directory path or 'git' (staged files) to replace all occurrences`,
         type: 'string',
-        demandOption: false,
+        demandOption: true,
       })
       .option('from', {
         describe: 'Rename from',

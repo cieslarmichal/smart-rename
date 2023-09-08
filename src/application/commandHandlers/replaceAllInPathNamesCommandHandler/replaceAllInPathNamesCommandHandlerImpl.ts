@@ -5,7 +5,6 @@ import {
   DataSourceType,
   ReplaceAllInPathNamesCommandHandler,
   ReplaceAllInPathNamesCommandHandlerPayload,
-  ReplaceAllInPathNamesCommandHandlerResult,
 } from './replaceAllInPathNamesCommandHandler.js';
 import { resolve } from 'path';
 
@@ -17,9 +16,7 @@ export interface ValidateIfPathsExistPayload {
 export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPathNamesCommandHandler {
   public constructor(private readonly fileSystemService: FileSystemService) {}
 
-  public async execute(
-    payload: ReplaceAllInPathNamesCommandHandlerPayload,
-  ): Promise<ReplaceAllInPathNamesCommandHandlerResult> {
+  public async execute(payload: ReplaceAllInPathNamesCommandHandlerPayload): Promise<void> {
     const { dataSource, replaceFrom, replaceTo, excludePaths = [] } = payload;
 
     const absoluteExcludePaths = excludePaths.map((excludePath) => resolve(excludePath));
@@ -55,8 +52,6 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
       }
     });
 
-    const changedPathNames: [string, string][] = [];
-
     for (const path of filteredPaths) {
       if (path.search(replaceFrom) === -1) {
         continue;
@@ -69,11 +64,7 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
       } else {
         await this.fileSystemService.move({ fromPath: path, toPath: newPath });
       }
-
-      changedPathNames.push([path, newPath]);
     }
-
-    return { changedPathNames };
   }
 
   private validateIfPathsExist(payload: ValidateIfPathsExistPayload): void {

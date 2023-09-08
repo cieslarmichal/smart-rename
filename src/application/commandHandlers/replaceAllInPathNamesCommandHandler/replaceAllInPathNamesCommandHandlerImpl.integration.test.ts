@@ -78,61 +78,96 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
     await rm(testDataDirectory, { recursive: true });
   });
 
-  const findPathsInChangedPaths = (changedPathNames: [string, string][], path1: string, path2: string): boolean => {
-    return changedPathNames.findIndex((pair) => pair[0] === path1 && pair[1] === path2) !== -1;
+  const filesExist = (paths: string[]): boolean => {
+    return paths.every((path) => existsSync(path));
+  };
+
+  const filesNotExist = (paths: string[]): boolean => {
+    return !paths.some((path) => existsSync(path));
   };
 
   it('renames paths without excluded paths', async () => {
-    const { changedPathNames } = await replaceAllInPathNamesCommandHandler.execute({
+    await replaceAllInPathNamesCommandHandler.execute({
       dataSource: { type: DataSourceType.path, path: testDataDirectory },
       replaceFrom: 'user',
       replaceTo: 'customer',
       excludePaths: [],
     });
 
-    expect(changedPathNames.length).toEqual(15);
+    expect(
+      filesNotExist([
+        userRepositoryImplFile,
+        userRepositoryFile,
+        userServiceImplFile,
+        userHashServiceImplFile,
+        userServiceFile,
+        userHashServiceFile,
+        userRepositoryDirectory,
+        userHashServiceDirectory,
+        userServiceDirectory,
+        userModuleFile,
+        userRepositoriesDirectory,
+        userDirectory,
+        userServicesDirectory,
+        userDomainDirectory,
+        userModuleDirectory,
+      ]),
+    ).toBe(true);
 
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoryImplFile, customerRepositoryImplFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoryFile, customerRepositoryFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userServiceImplFile, customerServiceImplFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userHashServiceImplFile, customerHashServiceImplFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userServiceFile, customerServiceFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userHashServiceFile, customerHashServiceFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoryDirectory, customerRepositoryDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userHashServiceDirectory, customerHashServiceDirectory)).toBe(
-      true,
-    );
-    expect(findPathsInChangedPaths(changedPathNames, userServiceDirectory, customerServiceDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userModuleFile, customerModuleFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoriesDirectory, customerRepositoriesDirectory)).toBe(
-      true,
-    );
-    expect(findPathsInChangedPaths(changedPathNames, userDirectory, customerDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userServicesDirectory, customerServicesDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userDomainDirectory, customerDomainDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userModuleDirectory, customerModuleDirectory)).toBe(true);
+    expect(
+      filesExist([
+        customerRepositoryImplFile,
+        customerRepositoryFile,
+        customerServiceImplFile,
+        customerHashServiceImplFile,
+        customerServiceFile,
+        customerHashServiceFile,
+        customerRepositoryDirectory,
+        customerHashServiceDirectory,
+        customerServiceDirectory,
+        customerModuleFile,
+        customerRepositoriesDirectory,
+        customerDirectory,
+        customerServicesDirectory,
+        customerDomainDirectory,
+        customerModuleDirectory,
+      ]),
+    ).toBe(true);
   });
 
   it('renames paths with excluded paths', async () => {
-    const { changedPathNames } = await replaceAllInPathNamesCommandHandler.execute({
+    await replaceAllInPathNamesCommandHandler.execute({
       dataSource: { type: DataSourceType.path, path: testDataDirectory },
       replaceFrom: 'user',
       replaceTo: 'customer',
       excludePaths: [userServicesDirectory],
     });
 
-    expect(changedPathNames.length).toEqual(8);
+    expect(
+      filesNotExist([
+        userRepositoryImplFile,
+        userRepositoryFile,
+        userRepositoryDirectory,
+        userModuleFile,
+        userRepositoriesDirectory,
+        userDirectory,
+        userDomainDirectory,
+        userModuleDirectory,
+      ]),
+    ).toBe(true);
 
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoryImplFile, customerRepositoryImplFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoryFile, customerRepositoryFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoryDirectory, customerRepositoryDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userModuleFile, customerModuleFile)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userRepositoriesDirectory, customerRepositoriesDirectory)).toBe(
-      true,
-    );
-    expect(findPathsInChangedPaths(changedPathNames, userDirectory, customerDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userDomainDirectory, customerDomainDirectory)).toBe(true);
-    expect(findPathsInChangedPaths(changedPathNames, userModuleDirectory, customerModuleDirectory)).toBe(true);
+    expect(
+      filesExist([
+        customerRepositoryImplFile,
+        customerRepositoryFile,
+        customerRepositoryDirectory,
+        customerModuleFile,
+        customerRepositoriesDirectory,
+        customerDirectory,
+        customerDomainDirectory,
+        customerModuleDirectory,
+      ]),
+    ).toBe(true);
   });
 
   it('throws if provided input path does not exist', async () => {
