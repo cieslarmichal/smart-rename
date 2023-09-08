@@ -54,13 +54,15 @@ export class Application {
         type: 'string',
         demandOption: true,
       })
-      .option('from', {
+      .option('f', {
+        alias: 'from',
         describe: 'Rename from',
         type: 'string',
         demandOption: true,
       })
-      .option('to', {
-        describe: 'Rename from',
+      .option('t', {
+        alias: 'to',
+        describe: 'Rename to',
         type: 'string',
         demandOption: true,
       })
