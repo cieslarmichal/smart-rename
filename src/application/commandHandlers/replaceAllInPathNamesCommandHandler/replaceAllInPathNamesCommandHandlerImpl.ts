@@ -7,6 +7,7 @@ import {
   ReplaceAllInPathNamesCommandHandlerPayload,
   ReplaceAllInPathNamesCommandHandlerResult,
 } from './replaceAllInPathNamesCommandHandler.js';
+import { resolve } from 'path';
 
 export interface ValidateIfPathsExistPayload {
   readonly inputPaths: string[];
@@ -21,15 +22,19 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
   ): Promise<ReplaceAllInPathNamesCommandHandlerResult> {
     const { dataSource, replaceFrom, replaceTo, excludePaths = [] } = payload;
 
+    const absoluteExcludePaths = excludePaths.map((excludePath) => resolve(excludePath));
+
     let allPaths: string[];
 
     if (dataSource.type === DataSourceType.path) {
       this.validateIfPathsExist({ inputPaths: [dataSource.path], excludePaths });
 
-      if (await this.fileSystemService.checkIfPathIsDirectory({ path: dataSource.path })) {
-        allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: dataSource.path });
+      const absolutePath = resolve(dataSource.path);
+
+      if (await this.fileSystemService.checkIfPathIsDirectory({ path: absolutePath })) {
+        allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: absolutePath });
       } else {
-        allPaths = [dataSource.path];
+        allPaths = [absolutePath];
       }
     } else {
       // TODO: git staged files
@@ -37,7 +42,7 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
     }
 
     const filteredPaths = allPaths.filter(
-      (filePath) => excludePaths.find((excludePath) => filePath.includes(excludePath)) === undefined,
+      (filePath) => absoluteExcludePaths.find((excludePath) => filePath.includes(excludePath)) === undefined,
     );
 
     filteredPaths.sort((path1, path2) => {
