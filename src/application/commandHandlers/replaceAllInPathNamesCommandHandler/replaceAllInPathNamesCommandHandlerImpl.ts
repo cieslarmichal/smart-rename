@@ -26,7 +26,7 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
     if (dataSource.type === DataSourceType.path) {
       this.validateIfPathsExist({ inputPaths: [dataSource.path], excludePaths });
 
-      if (this.fileSystemService.checkIfPathIsDirectory({ path: dataSource.path })) {
+      if (await this.fileSystemService.checkIfPathIsDirectory({ path: dataSource.path })) {
         allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: dataSource.path });
       } else {
         allPaths = [dataSource.path];

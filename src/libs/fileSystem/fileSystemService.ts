@@ -24,8 +24,8 @@ export interface RemovePayload {
 }
 
 export interface FileSystemService {
-  checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): boolean;
-  checkIfPathIsFile(payload: CheckIfPathIsFilePayload): boolean;
+  checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): Promise<boolean>;
+  checkIfPathIsFile(payload: CheckIfPathIsFilePayload): Promise<boolean>;
   checkIfPathExists(payload: CheckIfPathExistsPayload): boolean;
   getAllPathsFromDirectory(payload: GetAllPathsFromDirectoryPayload): Promise<string[]>;
   move(payload: MovePayload): Promise<void>;
