@@ -49,13 +49,20 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
   const customerHashServiceFile = join(customerHashServiceDirectory, 'hashService.ts');
   const customerHashServiceImplFile = join(customerHashServiceDirectory, 'hashServiceImpl.ts');
 
+  const filesExist = (paths: string[]): boolean => {
+    return paths.every((path) => existsSync(path));
+  };
+
+  const filesNotExist = (paths: string[]): boolean => {
+    return !paths.some((path) => existsSync(path));
+  };
+
   beforeEach(async () => {
     if (existsSync(testDataDirectory)) {
       await rm(testDataDirectory, { recursive: true });
     }
 
     await mkdir(testDataDirectory);
-
     await mkdir(userModuleDirectory);
     await mkdir(userRepositoriesDirectory);
     await mkdir(userRepositoryDirectory);
@@ -77,14 +84,6 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
   afterEach(async () => {
     await rm(testDataDirectory, { recursive: true });
   });
-
-  const filesExist = (paths: string[]): boolean => {
-    return paths.every((path) => existsSync(path));
-  };
-
-  const filesNotExist = (paths: string[]): boolean => {
-    return !paths.some((path) => existsSync(path));
-  };
 
   it('renames paths without excluded paths', async () => {
     await replaceAllInPathNamesCommandHandler.execute({
