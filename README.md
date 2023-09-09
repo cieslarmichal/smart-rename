@@ -11,8 +11,14 @@ npm i -g smart-rename
 ## Example with directory
 
 ```
-smart-rename ./userRepository --from user --to customer
+smart-rename . --from user --to customer
+smart-rename . --from User --to Customer
 ```
+
+<p float="left">
+  <img src="./images/directory_before.png" width="400" height="800" />
+  <img src="./images/directory_after.png" width="400" height="800" /> 
+</p>
 
 ## Example with git
 
