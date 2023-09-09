@@ -1,11 +1,11 @@
 {
-  "name": "rename-paths",
+  "name": "smart-rename",
   "version": "1.0.0",
   "author": "Michal Cieslar",
   "type": "module",
   "main": "dist/src/index.ts",
   "bin": {
-    "rps": "bin/rps.js"
+    "smart-rename": "bin/smartRename.js"
   },
   "files": [
     "bin",
@@ -14,13 +14,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cieslarmichal/rename-paths.git"
+    "url": "https://github.com/cieslarmichal/smart-rename.git"
   },
   "bugs": {
-    "url": "https://github.com/cieslarmichal/rename-paths/issues"
+    "url": "https://github.com/cieslarmichal/smart-rename/issues"
   },
   "keywords": [
-    "replace all",
+    "rename",
     "rename files",
     "rename directories",
     "rename paths",
