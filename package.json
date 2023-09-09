@@ -1,6 +1,6 @@
 {
   "name": "rename-paths",
-  "version": "1.0.8",
+  "version": "1.0.0",
   "author": "Michal Cieslar",
   "type": "module",
   "main": "dist/src/index.ts",
