@@ -1,3 +1,3 @@
 export interface GitService {
-  getStagedPaths(): Promise<string[]>;
+  getStagedFiles(): Promise<string[]>;
 }

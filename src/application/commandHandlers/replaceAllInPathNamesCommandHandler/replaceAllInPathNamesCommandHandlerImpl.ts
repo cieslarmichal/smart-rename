@@ -14,6 +14,10 @@ export interface ValidateIfPathsExistPayload {
   readonly excludePaths: string[];
 }
 
+export interface ExtractAllRelativePathsPayload {
+  readonly relativeFilePath: string;
+}
+
 export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPathNamesCommandHandler {
   public constructor(
     private readonly fileSystemService: FileSystemService,
@@ -38,13 +42,27 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
 
       allPaths.push(absolutePath);
     } else {
-      const gitStagedPaths = await this.gitService.getStagedPaths();
+      const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
-      const gitStagedExistingPaths = gitStagedPaths.filter((stagedPath) =>
-        this.fileSystemService.checkIfPathExists({ path: stagedPath }),
-      );
+      console.log(gitStagedRelativeFilePaths);
 
-      allPaths = gitStagedExistingPaths;
+      const gitStagedAbsolutePaths = gitStagedRelativeFilePaths
+        .map((gitStagedRelativeFilePath) => {
+          const relativePaths = this.extractAllRelativePaths({
+            relativeFilePath: gitStagedRelativeFilePath,
+          });
+
+          const absolutePaths = relativePaths.map((relativePath) => resolve(relativePath));
+
+          const existingPaths = absolutePaths.filter((path) => this.fileSystemService.checkIfPathExists({ path }));
+
+          return existingPaths;
+        })
+        .flat();
+
+      allPaths = [...new Set(gitStagedAbsolutePaths)];
+
+      console.log(allPaths);
     }
 
     const filteredPaths = allPaths.filter(
@@ -90,5 +108,27 @@ export class ReplaceAllInPathNamesCommandHandlerImpl implements ReplaceAllInPath
         throw new ExcludePathNotExistsError({ path: excludePath });
       }
     });
+  }
+
+  private extractAllRelativePaths(payload: ExtractAllRelativePathsPayload): string[] {
+    const { relativeFilePath } = payload;
+
+    const filePathParts = relativeFilePath.split('/');
+
+    const allRelativePaths: string[] = [];
+
+    for (let i = 0; i < filePathParts.length; i++) {
+      let relativePathParts = [];
+
+      for (let j = 0; j <= i; j++) {
+        relativePathParts.push(filePathParts[j]);
+      }
+
+      const relativePath = relativePathParts.join('/');
+
+      allRelativePaths.push(relativePath);
+    }
+
+    return allRelativePaths;
   }
 }
