@@ -14,13 +14,13 @@ export type GitSource = {
 
 export type DataSource = PathSource | GitSource;
 
-export interface ReplaceAllInPathNamesCommandHandlerPayload {
+export interface ReplacePathNamesCommandHandlerPayload {
   readonly dataSource: DataSource;
   readonly replaceFrom: string;
   readonly replaceTo: string;
   readonly excludePaths?: string[];
 }
 
-export interface ReplaceAllInPathNamesCommandHandler {
-  execute(payload: ReplaceAllInPathNamesCommandHandlerPayload): Promise<void>;
+export interface ReplacePathNamesCommandHandler {
+  execute(payload: ReplacePathNamesCommandHandlerPayload): Promise<void>;
 }

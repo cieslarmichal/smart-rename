@@ -2,25 +2,22 @@ import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { ExcludePathNotExistsError } from '../../errors/excludePathNotExistsError.js';
 import { InputPathNotExistsError } from '../../errors/inputPathNotExistsError.js';
 import { join } from 'path';
-import { ReplaceAllInPathNamesCommandHandlerImpl } from './replaceAllInPathNamesCommandHandlerImpl.js';
+import { ReplacePathNamesCommandHandlerImpl } from './replacePathNamesCommandHandlerImpl.js';
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { existsSync } from 'fs';
-import { DataSourceType } from './replaceAllInPathNamesCommandHandler.js';
+import { DataSourceType } from './replacePathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from '../../services/gitService/gitServiceImpl.js';
 
-describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
+describe('ReplacePathNamesCommandHandlerImpl', () => {
   const fileSystemService = new FileSystemServiceImpl();
 
   const gitClient = GitClientFactory.create();
 
   const gitService = new GitServiceImpl(gitClient);
 
-  const replaceAllInPathNamesCommandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(
-    fileSystemService,
-    gitService,
-  );
+  const replacePathNamesCommandHandler = new ReplacePathNamesCommandHandlerImpl(fileSystemService, gitService);
 
   const testDataDirectory = join(__dirname, '..', '..', '..', '..', 'tests');
 
@@ -95,7 +92,7 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
   });
 
   it('renames paths without excluded paths', async () => {
-    await replaceAllInPathNamesCommandHandler.execute({
+    await replacePathNamesCommandHandler.execute({
       dataSource: { type: DataSourceType.path, path: testDataDirectory },
       replaceFrom: 'user',
       replaceTo: 'customer',
@@ -144,7 +141,7 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
   });
 
   it('renames paths with excluded paths', async () => {
-    await replaceAllInPathNamesCommandHandler.execute({
+    await replacePathNamesCommandHandler.execute({
       dataSource: { type: DataSourceType.path, path: testDataDirectory },
       replaceFrom: 'user',
       replaceTo: 'customer',
@@ -182,7 +179,7 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
     const inputPath = 'invalid';
 
     try {
-      await replaceAllInPathNamesCommandHandler.execute({
+      await replacePathNamesCommandHandler.execute({
         dataSource: { type: DataSourceType.path, path: inputPath },
         excludePaths: [],
         replaceFrom: 'user',
@@ -201,7 +198,7 @@ describe('ReplaceAllInPathNamesCommandHandlerImpl', () => {
     const excludePaths: string[] = ['invalid'];
 
     try {
-      await replaceAllInPathNamesCommandHandler.execute({
+      await replacePathNamesCommandHandler.execute({
         dataSource: { type: DataSourceType.path, path: testDataDirectory },
         excludePaths,
         replaceFrom: 'user',

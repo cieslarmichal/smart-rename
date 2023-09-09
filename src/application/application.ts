@@ -1,11 +1,11 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { ReplaceAllInPathNamesCommandHandlerImpl } from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandlerImpl.js';
+import { ReplacePathNamesCommandHandlerImpl } from './commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandlerImpl.js';
 import { BaseError } from './errors/baseError.js';
 import {
   DataSource,
   DataSourceType,
-} from './commandHandlers/replaceAllInPathNamesCommandHandler/replaceAllInPathNamesCommandHandler.js';
+} from './commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from './services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from './services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from './services/gitService/gitServiceImpl.js';
@@ -32,7 +32,7 @@ export class Application {
 
           const gitService = new GitServiceImpl(gitClient);
 
-          const commandHandler = new ReplaceAllInPathNamesCommandHandlerImpl(fileSystemService, gitService);
+          const commandHandler = new ReplacePathNamesCommandHandlerImpl(fileSystemService, gitService);
 
           try {
             let dataSource: DataSource;
