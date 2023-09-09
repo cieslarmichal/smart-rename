@@ -1,7 +1,6 @@
 import {
   CheckIfPathExistsPayload,
   CheckIfPathIsDirectoryPayload,
-  CheckIfPathIsFilePayload,
   FileSystemService,
   GetAllPathsFromDirectoryPayload,
   MovePayload,
@@ -14,14 +13,6 @@ import { move as asyncMove } from 'fs-extra';
 
 export class FileSystemServiceImpl implements FileSystemService {
   public async checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): Promise<boolean> {
-    const { path } = payload;
-
-    const stats = await lstat(path);
-
-    return stats.isDirectory();
-  }
-
-  public async checkIfPathIsFile(payload: CheckIfPathIsFilePayload): Promise<boolean> {
     const { path } = payload;
 
     const stats = await lstat(path);
