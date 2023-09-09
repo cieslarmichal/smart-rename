@@ -15,16 +15,27 @@ smart-rename . --from user --to customer
 smart-rename . --from User --to Customer
 ```
 
-<p float="left">
-  <img src="./images/directory_before.png" width="400" height="800" />
-  <img src="./images/directory_after.png" width="400" height="800" /> 
-</p>
+##### Before:
 
-## Example with git
+<img src="./images/dir_example_before.png"/>
+
+##### After:
+
+<img src="./images/dir_example_after.png"/>
+
+## Example with git (current staged files)
 
 ```
 smart-rename git --from user --to customer
 ```
+
+##### Before:
+
+<img src="./images/git_example_before.png"/>
+
+##### After:
+
+<img src="./images/git_example_after.png"/>
 
 ## Flags
 
