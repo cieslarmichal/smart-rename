@@ -42,7 +42,7 @@ export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesComma
 
       allPaths = await this.getAllPathsFromDirectory({ directoryPath });
     } else {
-      allPaths = await this.getAllPathsGitStage();
+      allPaths = await this.getAllPathsFromGitStage();
     }
 
     const filteredPaths = allPaths.filter(
@@ -84,7 +84,7 @@ export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesComma
     return allPaths;
   }
 
-  private async getAllPathsGitStage(): Promise<string[]> {
+  private async getAllPathsFromGitStage(): Promise<string[]> {
     const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
     const gitStagedAbsolutePaths = gitStagedRelativeFilePaths
