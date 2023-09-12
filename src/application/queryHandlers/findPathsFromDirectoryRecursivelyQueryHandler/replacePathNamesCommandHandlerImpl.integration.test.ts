@@ -18,7 +18,7 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
 
   const replacePathNamesCommandHandler = new ReplacePathNamesCommandHandlerImpl(fileSystemService, gitService);
 
-  const testDataDirectory = join(__dirname, '..', '..', '..', '..', 'tests1');
+  const testDataDirectory = join(__dirname, '..', '..', '..', '..', 'tests2');
 
   const userModuleDirectory = join(testDataDirectory, 'userModule');
   const userRepositoriesDirectory = join(userModuleDirectory, 'repositories');

@@ -9,14 +9,6 @@ import { GitService } from '../../services/gitService/gitService.js';
 import { CollectionService } from '../../services/collectionService/collectionService.js';
 import { PathNotFoundError } from '../../errors/directoryNotFoundError.js';
 
-export interface GetAllPathsFromDirectoryPayload {
-  readonly directoryPath: string;
-}
-
-export interface ExtractAllRelativePathsPayload {
-  readonly relativeFilePath: string;
-}
-
 export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesCommandHandler {
   public constructor(
     private readonly fileSystemService: FileSystemService,
