@@ -18,7 +18,6 @@ export interface ReplacePathNamesCommandHandlerPayload {
   readonly dataSource: DataSource;
   readonly replaceFrom: string;
   readonly replaceTo: string;
-  readonly excludePaths?: string[];
 }
 
 export interface ReplacePathNamesCommandHandler {

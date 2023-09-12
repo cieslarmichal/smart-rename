@@ -24,15 +24,7 @@ export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesComma
   ) {}
 
   public async execute(payload: ReplacePathNamesCommandHandlerPayload): Promise<void> {
-    const { dataSource, replaceFrom, replaceTo, excludePaths = [] } = payload;
-
-    const absoluteExcludePaths = excludePaths.map((excludePath) => resolve(excludePath));
-
-    absoluteExcludePaths.map((excludePath) => {
-      if (!this.fileSystemService.checkIfPathExists({ path: excludePath })) {
-        throw new PathNotFoundError({ path: excludePath });
-      }
-    });
+    const { dataSource, replaceFrom, replaceTo } = payload;
 
     let allPaths: string[] = [];
 
@@ -44,13 +36,9 @@ export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesComma
       allPaths = await this.getAllPathsFromGitStage();
     }
 
-    const filteredPaths = allPaths.filter(
-      (filePath) => absoluteExcludePaths.find((excludePath) => filePath.includes(excludePath)) === undefined,
-    );
+    CollectionService.sortByLengthDescending({ data: allPaths });
 
-    CollectionService.sortByLengthDescending({ data: filteredPaths });
-
-    for (const path of filteredPaths) {
+    for (const path of allPaths) {
       if (path.search(replaceFrom) === -1) {
         continue;
       }

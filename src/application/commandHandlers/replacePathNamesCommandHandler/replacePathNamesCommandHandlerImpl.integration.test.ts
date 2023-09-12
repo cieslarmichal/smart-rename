@@ -95,7 +95,6 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
       dataSource: { type: DataSourceType.path, path: testDataDirectory },
       replaceFrom: 'user',
       replaceTo: 'customer',
-      excludePaths: [],
     });
 
     expect(
@@ -139,67 +138,12 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
     ).toBe(true);
   });
 
-  it('renames paths with excluded paths', async () => {
-    await replacePathNamesCommandHandler.execute({
-      dataSource: { type: DataSourceType.path, path: testDataDirectory },
-      replaceFrom: 'user',
-      replaceTo: 'customer',
-      excludePaths: [userServicesDirectory],
-    });
-
-    expect(
-      filesNotExist([
-        userRepositoryImplFile,
-        userRepositoryFile,
-        userRepositoryDirectory,
-        userModuleFile,
-        userRepositoriesDirectory,
-        userDirectory,
-        userDomainDirectory,
-        userModuleDirectory,
-      ]),
-    ).toBe(true);
-
-    expect(
-      filesExist([
-        customerRepositoryImplFile,
-        customerRepositoryFile,
-        customerRepositoryDirectory,
-        customerModuleFile,
-        customerRepositoriesDirectory,
-        customerDirectory,
-        customerDomainDirectory,
-        customerModuleDirectory,
-      ]),
-    ).toBe(true);
-  });
-
   it('throws if provided input path does not exist', async () => {
     const inputPath = 'invalid';
 
     try {
       await replacePathNamesCommandHandler.execute({
         dataSource: { type: DataSourceType.path, path: inputPath },
-        excludePaths: [],
-        replaceFrom: 'user',
-        replaceTo: 'customer',
-      });
-    } catch (error) {
-      expect(error).toBeInstanceOf(PathNotFoundError);
-
-      return;
-    }
-
-    expect.fail();
-  });
-
-  it('throws if provided exclude path does not exist', async () => {
-    const excludePaths: string[] = ['invalid'];
-
-    try {
-      await replacePathNamesCommandHandler.execute({
-        dataSource: { type: DataSourceType.path, path: testDataDirectory },
-        excludePaths,
         replaceFrom: 'user',
         replaceTo: 'customer',
       });

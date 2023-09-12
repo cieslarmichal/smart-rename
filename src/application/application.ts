@@ -11,7 +11,7 @@ import { GitClientFactory } from './services/gitService/gitClient/gitClientFacto
 import { GitServiceImpl } from './services/gitService/gitServiceImpl.js';
 
 export class Application {
-  public start(): void {
+  public static async start(): Promise<void> {
     yargs(hideBin(process.argv))
       .command(
         '$0 <source>',
@@ -23,8 +23,6 @@ export class Application {
           const replaceFrom = argv['from'] as string;
 
           const replaceTo = argv['to'] as string;
-
-          const excludePaths = argv['e'] as string[];
 
           const fileSystemService = new FileSystemServiceImpl();
 
@@ -43,7 +41,7 @@ export class Application {
               dataSource = { type: DataSourceType.path, path: source };
             }
 
-            await commandHandler.execute({ dataSource, replaceFrom, replaceTo, excludePaths });
+            await commandHandler.execute({ dataSource, replaceFrom, replaceTo });
           } catch (error) {
             if (error instanceof BaseError) {
               console.error({ errorMessage: error.message, errorContext: error.context });
@@ -71,12 +69,6 @@ export class Application {
         describe: 'Rename to',
         type: 'string',
         demandOption: true,
-      })
-      .option('e', {
-        alias: 'exclude',
-        describe: 'Directories/files names to be excluded from search',
-        type: 'array',
-        demandOption: false,
       })
       .help().argv;
   }
