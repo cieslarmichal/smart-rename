@@ -1,7 +1,7 @@
-import { BaseError } from './baseError.js';
+import { BaseError } from '../../types/errors/baseError.js';
 
 interface Context {
-  readonly path: string;
+  readonly currentWorkingDirectory: string;
 }
 
 export class GitRepositoryNotFoundError extends BaseError<Context> {

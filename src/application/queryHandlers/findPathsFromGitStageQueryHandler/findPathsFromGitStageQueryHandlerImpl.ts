@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { GitService } from '../../services/gitService/gitService.js';
 import { FindPathsFromGitStageQueryHandler } from './findPathsFromGitStageQueryHandler.js';
 import { FileSystemService } from '../../services/fileSystemService/fileSystemService.js';
+import { GitRepositoryNotFoundError } from '../../errors/gitRepositoryNotFoundError.js';
 
 export interface ExtractAllRelativePathsPayload {
   readonly relativeFilePath: string;
@@ -14,6 +15,10 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
   ) {}
 
   public async execute(): Promise<string[]> {
+    if (!(await this.gitService.checkIfCurrentPathIsGitRepository())) {
+      throw new GitRepositoryNotFoundError({ currentWorkingDirectory: __dirname });
+    }
+
     const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
     const gitStagedAbsolutePaths = gitStagedRelativeFilePaths

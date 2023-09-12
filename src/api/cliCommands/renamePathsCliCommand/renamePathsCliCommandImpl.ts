@@ -1,10 +1,15 @@
 import { type Argv } from 'yargs';
 import { RenamePathsCliCommand, RenamePathsCliCommandOptions } from './renamePathsCliCommand.js';
-import { NoneOfOptionalOptionsProvidedError } from '../../errors/noneOfOptionalOptionsProvidedError.js';
-import { ReplacePathNamesCommandHandlerImpl } from '../../commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandlerImpl.js';
-import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
-import { GitClientFactory } from '../../services/gitService/gitClient/gitClientFactory.js';
-import { GitServiceImpl } from '../../services/gitService/gitServiceImpl.js';
+import {
+  DataSource,
+  DataSourceType,
+} from '../../../application/commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandler.js';
+import { ReplacePathNamesCommandHandlerImpl } from '../../../application/commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandlerImpl.js';
+import { NoneOfOptionalOptionsProvidedError } from '../../../application/errors/noneOfOptionalOptionsProvidedError.js';
+import { FileSystemServiceImpl } from '../../../application/services/fileSystemService/fileSystemServiceImpl.js';
+import { GitClientFactory } from '../../../application/services/gitService/gitClient/gitClientFactory.js';
+import { GitServiceImpl } from '../../../application/services/gitService/gitServiceImpl.js';
+import { BaseError } from '../../../types/errors/baseError.js';
 
 export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
   public readonly command = '$0 <source>';

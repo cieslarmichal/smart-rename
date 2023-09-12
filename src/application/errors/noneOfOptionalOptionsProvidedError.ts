@@ -1,4 +1,4 @@
-import { BaseError } from './baseError.js';
+import { BaseError } from '../../types/errors/baseError.js';
 
 interface Context {
   readonly fieldsNames: string[];
