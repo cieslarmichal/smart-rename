@@ -7,7 +7,7 @@ import { DataSourceType } from './replacePathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from '../../services/gitService/gitServiceImpl.js';
-import { PathNotFoundError } from '../../errors/pathNotFoundError.js';
+import { PathNotFoundError } from '../../errors/directoryNotFoundError.js';
 
 describe('ReplacePathNamesCommandHandlerImpl', () => {
   const fileSystemService = new FileSystemServiceImpl();

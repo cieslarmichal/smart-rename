@@ -4,8 +4,8 @@ interface Context {
   readonly path: string;
 }
 
-export class PathNotFoundError extends BaseError<Context> {
+export class DirectoryNotFoundError extends BaseError<Context> {
   public constructor(context: Context) {
-    super('PathNotFoundError', 'Path does not exist.', context);
+    super('DirectoryNotFoundError', 'Directory not found.', context);
   }
 }

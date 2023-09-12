@@ -7,7 +7,7 @@ import {
 import { resolve } from 'path';
 import { GitService } from '../../services/gitService/gitService.js';
 import { CollectionService } from '../../services/collectionService/collectionService.js';
-import { PathNotFoundError } from '../../errors/pathNotFoundError.js';
+import { PathNotFoundError } from '../../errors/directoryNotFoundError.js';
 
 export interface GetAllPathsFromDirectoryPayload {
   readonly directoryPath: string;
