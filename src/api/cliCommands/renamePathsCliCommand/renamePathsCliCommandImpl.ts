@@ -1,15 +1,13 @@
 import { type Argv } from 'yargs';
 import { RenamePathsCliCommand, RenamePathsCliCommandOptions } from './renamePathsCliCommand.js';
-import {
-  DataSource,
-  DataSourceType,
-} from '../../../application/commandHandlers/replaceInPathNamesCommandHandler/replaceInPathNamesCommandHandler.js';
 import { ReplaceInPathNamesCommandHandlerImpl } from '../../../application/commandHandlers/replaceInPathNamesCommandHandler/replaceInPathNamesCommandHandlerImpl.js';
 import { NoneOfOptionalOptionsProvidedError } from '../../../application/errors/noneOfOptionalOptionsProvidedError.js';
 import { FileSystemServiceImpl } from '../../../application/services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../../application/services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from '../../../application/services/gitService/gitServiceImpl.js';
 import { BaseError } from '../../../types/errors/baseError.js';
+import { FindPathsFromDirectoryRecursivelyQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromDirectoryRecursivelyQueryHandler/findPathsFromDirectoryRecursivelyQueryHandlerImpl.js';
+import { FindPathsFromGitStageQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromGitStageQueryHandler/findPathsFromGitStageQueryHandlerImpl.js';
 
 export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
   public readonly command = '$0 <source>';
@@ -31,13 +29,13 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
           conflicts: 'path',
         },
         from: {
-          description: 'Rename from',
+          description: 'Replace from',
           string: true,
           demandOption: true,
           alias: 'f',
         },
         to: {
-          description: 'Rename to',
+          description: 'Replace to',
           string: true,
           demandOption: true,
           alias: 't',
@@ -53,13 +51,11 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
       throw new NoneOfOptionalOptionsProvidedError({ fieldsNames: ['path', 'gitStage'] });
     }
 
-    const includePathsFromGitStage = options.gitStage ?? false;
+    const directoryPath = options.path;
 
-    const projectKey = options.path;
+    const replaceFrom = options.from;
 
-    const renameFrom = options.from;
-
-    const renameTo = options.from;
+    const replaceTo = options.from;
 
     const fileSystemService = new FileSystemServiceImpl();
 
@@ -67,18 +63,20 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
 
     const gitService = new GitServiceImpl(gitClient);
 
-    const commandHandler = new ReplaceInPathNamesCommandHandlerImpl(fileSystemService, gitService);
+    const replaceInPathNamesCommandHandler = new ReplaceInPathNamesCommandHandlerImpl(fileSystemService);
+
+    const findPathsFromDirectoryRecursivelyQueryHandler = new FindPathsFromDirectoryRecursivelyQueryHandlerImpl(
+      fileSystemService,
+    );
+
+    const findPathsFromGitStageQueryHandler = new FindPathsFromGitStageQueryHandlerImpl(gitService, fileSystemService);
 
     try {
-      let dataSource: DataSource;
+      const paths = directoryPath
+        ? await findPathsFromDirectoryRecursivelyQueryHandler.execute({ directoryPath })
+        : await findPathsFromGitStageQueryHandler.execute();
 
-      if (source === 'git') {
-        dataSource = { type: DataSourceType.git };
-      } else {
-        dataSource = { type: DataSourceType.path, path: source };
-      }
-
-      await commandHandler.execute({ dataSource, replaceFrom, replaceTo });
+      await replaceInPathNamesCommandHandler.execute({ paths, replaceFrom, replaceTo });
     } catch (error) {
       if (error instanceof BaseError) {
         console.error({ errorMessage: error.message, errorContext: error.context });
