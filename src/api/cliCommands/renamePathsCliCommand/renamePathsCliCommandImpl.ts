@@ -3,8 +3,8 @@ import { RenamePathsCliCommand, RenamePathsCliCommandOptions } from './renamePat
 import {
   DataSource,
   DataSourceType,
-} from '../../../application/commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandler.js';
-import { ReplacePathNamesCommandHandlerImpl } from '../../../application/commandHandlers/replacePathNamesCommandHandler/replacePathNamesCommandHandlerImpl.js';
+} from '../../../application/commandHandlers/replaceInPathNamesCommandHandler/replaceInPathNamesCommandHandler.js';
+import { ReplaceInPathNamesCommandHandlerImpl } from '../../../application/commandHandlers/replaceInPathNamesCommandHandler/replaceInPathNamesCommandHandlerImpl.js';
 import { NoneOfOptionalOptionsProvidedError } from '../../../application/errors/noneOfOptionalOptionsProvidedError.js';
 import { FileSystemServiceImpl } from '../../../application/services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../../application/services/gitService/gitClient/gitClientFactory.js';
@@ -67,7 +67,7 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
 
     const gitService = new GitServiceImpl(gitClient);
 
-    const commandHandler = new ReplacePathNamesCommandHandlerImpl(fileSystemService, gitService);
+    const commandHandler = new ReplaceInPathNamesCommandHandlerImpl(fileSystemService, gitService);
 
     try {
       let dataSource: DataSource;

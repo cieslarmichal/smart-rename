@@ -1,22 +1,14 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { join } from 'path';
-import { ReplacePathNamesCommandHandlerImpl } from './replacePathNamesCommandHandlerImpl.js';
+import { ReplaceInPathNamesCommandHandlerImpl } from './replaceInPathNamesCommandHandlerImpl.js';
 import { mkdir, writeFile, rm } from 'node:fs/promises';
 import { existsSync } from 'fs';
-import { DataSourceType } from './replacePathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
-import { GitClientFactory } from '../../services/gitService/gitClient/gitClientFactory.js';
-import { GitServiceImpl } from '../../services/gitService/gitServiceImpl.js';
-import { PathNotFoundError } from '../../errors/directoryNotFoundError.js';
 
-describe('ReplacePathNamesCommandHandlerImpl', () => {
+describe('ReplaceInPathNamesCommandHandlerImpl', () => {
   const fileSystemService = new FileSystemServiceImpl();
 
-  const gitClient = GitClientFactory.create();
-
-  const gitService = new GitServiceImpl(gitClient);
-
-  const replacePathNamesCommandHandler = new ReplacePathNamesCommandHandlerImpl(fileSystemService, gitService);
+  const replaceInPathNamesCommandHandler = new ReplaceInPathNamesCommandHandlerImpl(fileSystemService);
 
   const testDataDirectory = join(__dirname, '..', '..', '..', '..', 'tests1');
 
@@ -90,9 +82,26 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
     await rm(testDataDirectory, { recursive: true });
   });
 
-  it('renames paths without excluded paths', async () => {
-    await replacePathNamesCommandHandler.execute({
-      dataSource: { type: DataSourceType.path, path: testDataDirectory },
+  it('replaces occurences in path names', async () => {
+    await replaceInPathNamesCommandHandler.execute({
+      paths: [
+        userRepositoryImplFile,
+        userRepositoryFile,
+        userServiceImplFile,
+        userHashServiceImplFile,
+        userServiceFile,
+        userHashServiceFile,
+        userRepositoryDirectory,
+        userHashServiceDirectory,
+        userServiceDirectory,
+        userModuleFile,
+        userRepositoriesDirectory,
+        userDirectory,
+        userServicesDirectory,
+        userDomainDirectory,
+        userModuleDirectory,
+        testDataDirectory,
+      ],
       replaceFrom: 'user',
       replaceTo: 'customer',
     });
@@ -136,23 +145,5 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
         customerModuleDirectory,
       ]),
     ).toBe(true);
-  });
-
-  it('throws if provided input path does not exist', async () => {
-    const inputPath = 'invalid';
-
-    try {
-      await replacePathNamesCommandHandler.execute({
-        dataSource: { type: DataSourceType.path, path: inputPath },
-        replaceFrom: 'user',
-        replaceTo: 'customer',
-      });
-    } catch (error) {
-      expect(error).toBeInstanceOf(PathNotFoundError);
-
-      return;
-    }
-
-    expect.fail();
   });
 });
