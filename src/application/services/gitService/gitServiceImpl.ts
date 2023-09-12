@@ -9,4 +9,10 @@ export class GitServiceImpl implements GitService {
 
     return staged;
   }
+
+  public async checkIfCurrentPathIsGitRepository(): Promise<boolean> {
+    const currentPathIsGitRepository = await this.gitClient.checkIsRepo();
+
+    return currentPathIsGitRepository;
+  }
 }
