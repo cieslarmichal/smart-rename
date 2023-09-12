@@ -1,6 +1,6 @@
 {
   "name": "smart-rename",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Michal Cieslar",
   "type": "module",
   "main": "dist/src/index.ts",
