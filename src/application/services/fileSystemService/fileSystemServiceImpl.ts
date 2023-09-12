@@ -15,11 +15,9 @@ export class FileSystemServiceImpl implements FileSystemService {
   public async checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): Promise<boolean> {
     const { path } = payload;
 
-    console.log(path);
     if (!this.checkIfPathExists({ path })) {
       return false;
     }
-    console.log(path);
 
     const stats = await lstat(path);
 

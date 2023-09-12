@@ -57,7 +57,7 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
 
     const replaceFrom = options.from;
 
-    const replaceTo = options.from;
+    const replaceTo = options.to;
 
     const fileSystemService = new FileSystemServiceImpl();
 
