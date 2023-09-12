@@ -1,6 +1,4 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { ExcludePathNotExistsError } from '../../errors/excludePathNotExistsError.js';
-import { InputPathNotExistsError } from '../../errors/inputPathNotExistsError.js';
 import { join } from 'path';
 import { ReplacePathNamesCommandHandlerImpl } from './replacePathNamesCommandHandlerImpl.js';
 import { mkdir, writeFile, rm } from 'node:fs/promises';
@@ -9,6 +7,7 @@ import { DataSourceType } from './replacePathNamesCommandHandler.js';
 import { FileSystemServiceImpl } from '../../services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from '../../services/gitService/gitServiceImpl.js';
+import { PathNotFoundError } from '../../errors/pathNotFoundError.js';
 
 describe('ReplacePathNamesCommandHandlerImpl', () => {
   const fileSystemService = new FileSystemServiceImpl();
@@ -186,7 +185,7 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
         replaceTo: 'customer',
       });
     } catch (error) {
-      expect(error).toBeInstanceOf(InputPathNotExistsError);
+      expect(error).toBeInstanceOf(PathNotFoundError);
 
       return;
     }
@@ -205,7 +204,7 @@ describe('ReplacePathNamesCommandHandlerImpl', () => {
         replaceTo: 'customer',
       });
     } catch (error) {
-      expect(error).toBeInstanceOf(ExcludePathNotExistsError);
+      expect(error).toBeInstanceOf(PathNotFoundError);
 
       return;
     }

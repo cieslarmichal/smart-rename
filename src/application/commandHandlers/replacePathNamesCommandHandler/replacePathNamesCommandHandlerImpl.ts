@@ -1,6 +1,4 @@
 import { FileSystemService } from '../../services/fileSystemService/fileSystemService.js';
-import { ExcludePathNotExistsError } from '../../errors/excludePathNotExistsError.js';
-import { InputPathNotExistsError } from '../../errors/inputPathNotExistsError.js';
 import {
   DataSourceType,
   ReplacePathNamesCommandHandler,
@@ -9,6 +7,7 @@ import {
 import { resolve } from 'path';
 import { GitService } from '../../services/gitService/gitService.js';
 import { CollectionService } from '../../services/collectionService/collectionService.js';
+import { PathNotFoundError } from '../../errors/pathNotFoundError.js';
 
 export interface GetAllPathsFromDirectoryPayload {
   readonly directoryPath: string;
@@ -31,7 +30,7 @@ export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesComma
 
     absoluteExcludePaths.map((excludePath) => {
       if (!this.fileSystemService.checkIfPathExists({ path: excludePath })) {
-        throw new ExcludePathNotExistsError({ path: excludePath });
+        throw new PathNotFoundError({ path: excludePath });
       }
     });
 
@@ -70,7 +69,7 @@ export class ReplacePathNamesCommandHandlerImpl implements ReplacePathNamesComma
     const { directoryPath } = payload;
 
     if (!this.fileSystemService.checkIfPathExists({ path: directoryPath })) {
-      throw new InputPathNotExistsError({ path: directoryPath });
+      throw new PathNotFoundError({ path: directoryPath });
     }
 
     let allPaths: string[] = [];
