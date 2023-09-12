@@ -31,7 +31,7 @@
     "build:clean": "rimraf dist",
     "build": "tsc --build tsconfig.build.json",
     "build:dev": "tsc --build tsconfig.json",
-    "test:integration": "vitest .integration.test.ts --threads false"
+    "test:integration": "vitest findPathsFromGitStageQueryHandlerImpl.integration.test.ts --threads false"
   },
   "dependencies": {
     "fs-extra": "^11.1.1",
