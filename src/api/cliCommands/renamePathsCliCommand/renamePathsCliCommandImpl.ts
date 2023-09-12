@@ -1,7 +1,6 @@
 import { type Argv } from 'yargs';
 import { RenamePathsCliCommand, RenamePathsCliCommandOptions } from './renamePathsCliCommand.js';
 import { ReplaceInPathNamesCommandHandlerImpl } from '../../../application/commandHandlers/replaceInPathNamesCommandHandler/replaceInPathNamesCommandHandlerImpl.js';
-import { NoneOfOptionalOptionsProvidedError } from '../../../application/errors/noneOfOptionalOptionsProvidedError.js';
 import { FileSystemServiceImpl } from '../../../application/services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../../application/services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from '../../../application/services/gitService/gitServiceImpl.js';
@@ -10,20 +9,20 @@ import { FindPathsFromDirectoryRecursivelyQueryHandlerImpl } from '../../../appl
 import { FindPathsFromGitStageQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromGitStageQueryHandler/findPathsFromGitStageQueryHandlerImpl.js';
 
 export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
-  public readonly command = '$0 <source>';
+  public readonly command = '$0';
   public readonly description = 'Replace all occurences in paths names.';
 
   public build(builder: Argv<RenamePathsCliCommandOptions>): Argv<RenamePathsCliCommandOptions> {
     return builder
       .option({
         path: {
-          description: 'Directory path (recursive search)',
+          description: 'Directory path (search includes directory path and all recursive paths inside)',
           string: true,
           demandOption: false,
           conflicts: 'gitStage',
         },
         gitStage: {
-          description: 'Whether to use git stage as a source of paths',
+          description: 'Whether to use paths from git stage',
           boolean: true,
           demandOption: false,
           conflicts: 'path',
@@ -41,14 +40,17 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
           alias: 't',
         },
       })
-      .example('smart-rename --path . --from user --to customer', 'Rename paths from current directory.')
-      .example('smart-rename --gitStage --from user --to customer', 'Rename paths from git stage.')
-      .usage('Usage: $0 [options]');
+      .usage('Usage: smart-rename [options]');
   }
 
   public async execute(options: RenamePathsCliCommandOptions): Promise<void> {
     if (options.path === undefined && options.gitStage === undefined) {
-      throw new NoneOfOptionalOptionsProvidedError({ fieldsNames: ['path', 'gitStage'] });
+      console.error({
+        errorMessage: 'At least one of the optional options need to be provided.',
+        errorContext: { optionalOptions: ['path', 'gitStage'] },
+      });
+
+      return;
     }
 
     const directoryPath = options.path;
