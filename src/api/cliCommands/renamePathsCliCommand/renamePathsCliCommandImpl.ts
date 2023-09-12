@@ -4,9 +4,9 @@ import { ReplaceInPathNamesCommandHandlerImpl } from '../../../application/comma
 import { FileSystemServiceImpl } from '../../../application/services/fileSystemService/fileSystemServiceImpl.js';
 import { GitClientFactory } from '../../../application/services/gitService/gitClient/gitClientFactory.js';
 import { GitServiceImpl } from '../../../application/services/gitService/gitServiceImpl.js';
-import { BaseError } from '../../../types/errors/baseError.js';
 import { FindPathsFromDirectoryRecursivelyQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromDirectoryRecursivelyQueryHandler/findPathsFromDirectoryRecursivelyQueryHandlerImpl.js';
 import { FindPathsFromGitStageQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromGitStageQueryHandler/findPathsFromGitStageQueryHandlerImpl.js';
+import { BaseError } from '../../../application/errors/baseError.js';
 
 export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
   public readonly command = '$0';

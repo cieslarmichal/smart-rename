@@ -1,4 +1,4 @@
-import { CliCommand } from '../../../types/cliCommand.js';
+import { CliCommand } from '../cliCommand.js';
 
 export interface RenamePathsCliCommandOptions {
   readonly path: string | undefined;

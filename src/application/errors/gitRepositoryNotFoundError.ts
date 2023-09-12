@@ -1,4 +1,4 @@
-import { BaseError } from '../../types/errors/baseError.js';
+import { BaseError } from './baseError.js';
 
 interface Context {
   readonly currentWorkingDirectory: string;
