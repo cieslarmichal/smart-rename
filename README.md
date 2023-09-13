@@ -43,7 +43,6 @@ smart-rename --gitStage --from user --to customer
 Usage: smart-rename [options]
 
 Options:
-Options:
   -p, --path                  Directory path (search includes directory path and all recursive paths inside)
   -g, --gitStage              Whether to use paths from git stage
   -f, --from                  Replace from
