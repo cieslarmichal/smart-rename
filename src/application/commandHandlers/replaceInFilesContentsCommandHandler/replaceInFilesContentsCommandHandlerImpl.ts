@@ -10,11 +10,17 @@ export class ReplaceInFilesContentsCommandHandlerImpl implements ReplaceInFilesC
   public async execute(payload: ReplaceInFilesContentsCommandHandlerPayload): Promise<void> {
     const { paths, replaceFrom, replaceTo } = payload;
 
-    const filesPaths = paths.filter(async (path) => {
-      const isFile = await this.fileSystemService.checkIfPathIsFile({ path });
+    const filesPaths: string[] = [];
 
-      return isFile;
-    });
+    await Promise.all(
+      paths.map(async (path) => {
+        const isFile = await this.fileSystemService.checkIfPathIsFile({ path });
+
+        if (isFile) {
+          filesPaths.push(path);
+        }
+      }),
+    );
 
     await Promise.all(
       filesPaths.map(async (filePath) => {

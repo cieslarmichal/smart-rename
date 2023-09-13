@@ -83,7 +83,7 @@ describe('ReplaceInPathNamesCommandHandlerImpl', () => {
   });
 
   it('replaces occurences in path names', async () => {
-    await replaceInPathNamesCommandHandler.execute({
+    const { changedPaths } = await replaceInPathNamesCommandHandler.execute({
       paths: [
         userRepositoryImplFile,
         userRepositoryFile,
@@ -145,5 +145,21 @@ describe('ReplaceInPathNamesCommandHandlerImpl', () => {
         customerModuleDirectory,
       ]),
     ).toBe(true);
+
+    expect(changedPaths.get(userRepositoryImplFile)).toEqual(customerRepositoryImplFile);
+    expect(changedPaths.get(userRepositoryFile)).toEqual(customerRepositoryFile);
+    expect(changedPaths.get(userServiceImplFile)).toEqual(customerServiceImplFile);
+    expect(changedPaths.get(userHashServiceImplFile)).toEqual(customerHashServiceImplFile);
+    expect(changedPaths.get(userServiceFile)).toEqual(customerServiceFile);
+    expect(changedPaths.get(userHashServiceFile)).toEqual(customerHashServiceFile);
+    expect(changedPaths.get(userRepositoryDirectory)).toEqual(customerRepositoryDirectory);
+    expect(changedPaths.get(userHashServiceDirectory)).toEqual(customerHashServiceDirectory);
+    expect(changedPaths.get(userServiceDirectory)).toEqual(customerServiceDirectory);
+    expect(changedPaths.get(userModuleFile)).toEqual(customerModuleFile);
+    expect(changedPaths.get(userRepositoriesDirectory)).toEqual(customerRepositoriesDirectory);
+    expect(changedPaths.get(userDirectory)).toEqual(customerDirectory);
+    expect(changedPaths.get(userServicesDirectory)).toEqual(customerServicesDirectory);
+    expect(changedPaths.get(userDomainDirectory)).toEqual(customerDomainDirectory);
+    expect(changedPaths.get(userModuleDirectory)).toEqual(customerModuleDirectory);
   });
 });
