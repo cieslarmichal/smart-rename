@@ -7,6 +7,7 @@ import { GitServiceImpl } from '../../../application/services/gitService/gitServ
 import { FindPathsFromDirectoryRecursivelyQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromDirectoryRecursivelyQueryHandler/findPathsFromDirectoryRecursivelyQueryHandlerImpl.js';
 import { FindPathsFromGitStageQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromGitStageQueryHandler/findPathsFromGitStageQueryHandlerImpl.js';
 import { BaseError } from '../../../application/errors/baseError.js';
+import { ReplaceInFilesContentsCommandHandlerImpl } from '../../../application/commandHandlers/replaceInFilesContentsCommandHandler/replaceInFilesContentsCommandHandlerImpl.js';
 
 export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
   public readonly command = '$0';
@@ -67,6 +68,8 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
 
     const replaceTo = options.to;
 
+    const includeFilesContents = options.includeFilesContents;
+
     const fileSystemService = new FileSystemServiceImpl();
 
     const gitClient = GitClientFactory.create();
@@ -74,6 +77,8 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
     const gitService = new GitServiceImpl(gitClient);
 
     const replaceInPathNamesCommandHandler = new ReplaceInPathNamesCommandHandlerImpl(fileSystemService);
+
+    const replaceInFilesContentsCommandHandler = new ReplaceInFilesContentsCommandHandlerImpl(fileSystemService);
 
     const findPathsFromDirectoryRecursivelyQueryHandler = new FindPathsFromDirectoryRecursivelyQueryHandlerImpl(
       fileSystemService,
@@ -86,7 +91,13 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
         ? await findPathsFromDirectoryRecursivelyQueryHandler.execute({ directoryPath })
         : await findPathsFromGitStageQueryHandler.execute();
 
-      await replaceInPathNamesCommandHandler.execute({ paths, replaceFrom, replaceTo });
+      const { changedPaths } = await replaceInPathNamesCommandHandler.execute({ paths, replaceFrom, replaceTo });
+
+      if (includeFilesContents) {
+        const updatedPaths = paths.map((path) => changedPaths.get(path) || path);
+
+        await replaceInFilesContentsCommandHandler.execute({ paths: updatedPaths, replaceFrom, replaceTo });
+      }
     } catch (error) {
       if (error instanceof BaseError) {
         console.error({ errorMessage: error.message, errorContext: error.context });

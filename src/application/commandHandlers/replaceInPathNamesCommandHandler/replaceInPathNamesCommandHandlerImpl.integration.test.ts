@@ -146,6 +146,7 @@ describe('ReplaceInPathNamesCommandHandlerImpl', () => {
       ]),
     ).toBe(true);
 
+    expect(changedPaths.size).toEqual(15);
     expect(changedPaths.get(userRepositoryImplFile)).toEqual(customerRepositoryImplFile);
     expect(changedPaths.get(userRepositoryFile)).toEqual(customerRepositoryFile);
     expect(changedPaths.get(userServiceImplFile)).toEqual(customerServiceImplFile);
