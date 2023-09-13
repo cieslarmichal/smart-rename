@@ -5,6 +5,7 @@ export interface RenamePathsCliCommandOptions {
   readonly gitStage: boolean | undefined;
   readonly from: string;
   readonly to: string;
+  readonly includeFilesContents: boolean | undefined;
 }
 
 export type RenamePathsCliCommand = CliCommand<RenamePathsCliCommandOptions>;

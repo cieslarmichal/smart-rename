@@ -20,12 +20,14 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
           string: true,
           demandOption: false,
           conflicts: 'gitStage',
+          alias: 'p',
         },
         gitStage: {
           description: 'Whether to use paths from git stage',
           boolean: true,
           demandOption: false,
           conflicts: 'path',
+          alias: 'g',
         },
         from: {
           description: 'Replace from',
@@ -38,6 +40,12 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
           string: true,
           demandOption: true,
           alias: 't',
+        },
+        includeFilesContents: {
+          description: 'Whether to also replace all occurences in files contents',
+          boolean: true,
+          demandOption: false,
+          alias: 'i',
         },
       })
       .usage('Usage: smart-rename [options]');
