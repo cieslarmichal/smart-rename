@@ -19,15 +19,15 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
           description: 'Directory path (search includes directory path and all recursive paths inside)',
           string: true,
           demandOption: false,
-          conflicts: 'gitStage',
           alias: 'p',
+          conflicts: 'gitStage',
         },
         gitStage: {
           description: 'Whether to use paths from git stage',
           boolean: true,
           demandOption: false,
-          conflicts: 'path',
           alias: 'g',
+          conflicts: 'path',
         },
         from: {
           description: 'Replace from',

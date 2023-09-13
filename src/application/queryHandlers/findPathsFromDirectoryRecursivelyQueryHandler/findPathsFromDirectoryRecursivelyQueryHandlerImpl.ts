@@ -16,6 +16,12 @@ export class FindPathsFromDirectoryRecursivelyQueryHandlerImpl
 
     const absoluteDirectoryPath = resolve(directoryPath);
 
+    const pathExists = this.fileSystemService.checkIfPathExists({ path: absoluteDirectoryPath });
+
+    if (!pathExists) {
+      throw new DirectoryNotFoundError({ path: absoluteDirectoryPath });
+    }
+
     const pathIsDirectory = await this.fileSystemService.checkIfPathIsDirectory({ path: absoluteDirectoryPath });
 
     if (!pathIsDirectory) {
