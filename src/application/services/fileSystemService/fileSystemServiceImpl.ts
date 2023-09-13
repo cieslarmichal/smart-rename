@@ -6,9 +6,10 @@ import {
   MovePayload,
   ReadFilePayload,
   RemovePayload,
+  WriteFilePayload,
 } from './fileSystemService.js';
 import { existsSync } from 'fs';
-import { readdir, rm, lstat, readFile as readFileAsync } from 'node:fs/promises';
+import { readdir, rm, lstat, readFile as readFileAsync, writeFile as writeFileAsync } from 'node:fs/promises';
 import { join } from 'path';
 import { move as asyncMove } from 'fs-extra';
 
@@ -81,5 +82,11 @@ export class FileSystemServiceImpl implements FileSystemService {
     const content = await readFileAsync(filePath, 'utf-8');
 
     return content.toString();
+  }
+
+  public async writeFile(payload: WriteFilePayload): Promise<void> {
+    const { filePath, data } = payload;
+
+    await writeFileAsync(filePath, data, 'utf-8');
   }
 }

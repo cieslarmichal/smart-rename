@@ -27,6 +27,11 @@ export interface ReadFilePayload {
   readonly filePath: string;
 }
 
+export interface WriteFilePayload {
+  readonly filePath: string;
+  readonly data: string;
+}
+
 export interface FileSystemService {
   checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): Promise<boolean>;
   checkIfPathIsFile(payload: CheckIfPathIsFilePayload): Promise<boolean>;
@@ -35,4 +40,5 @@ export interface FileSystemService {
   move(payload: MovePayload): Promise<void>;
   remove(payload: RemovePayload): Promise<void>;
   readFile(payload: ReadFilePayload): Promise<string>;
+  writeFile(payload: WriteFilePayload): Promise<void>;
 }
