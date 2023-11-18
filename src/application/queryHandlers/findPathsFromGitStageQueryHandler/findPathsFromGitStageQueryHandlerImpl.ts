@@ -27,9 +27,7 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
       .map((gitStagedRelativeFilePath) => {
         const gitStagedAbsoluteFilePath = resolve(gitStagedRelativeFilePath);
 
-        console.log({ gitStagedAbsoluteFilePath });
         const nestedPaths = this.extractAllNestedPaths({ path: gitStagedAbsoluteFilePath });
-        console.log({ nestedPaths });
 
         const existingPaths = nestedPaths.filter((path) => this.fileSystemService.checkIfPathExists({ path }));
 
