@@ -65,8 +65,7 @@ describe('FindPathsFromDirectoryRecursivelyQueryHandlerImpl', () => {
       directoryPath: testDataDirectory,
     });
 
-    expect(actualPaths.length).toBe(16);
-    expect(actualPaths.find((path) => path === testDataDirectory)).toBeDefined();
+    expect(actualPaths.length).toBe(15);
     expect(actualPaths.find((path) => path === userModuleDirectory)).toBeDefined();
     expect(actualPaths.find((path) => path === userRepositoriesDirectory)).toBeDefined();
     expect(actualPaths.find((path) => path === userRepositoryDirectory)).toBeDefined();

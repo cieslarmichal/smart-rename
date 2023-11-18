@@ -43,6 +43,7 @@ describe('FindPathsFromGitStageQueryHandlerImpl', () => {
   it('finds paths from git stage', async () => {
     const actualPaths = await findPathsFromGitStageQueryHandlerImpl.execute();
 
+    expect(actualPaths.length).toBe(3);
     expect(actualPaths.find((path) => path === testDataDirectory)).toBeDefined();
     expect(actualPaths.find((path) => path === userModuleDirectory)).toBeDefined();
     expect(actualPaths.find((path) => path === userModuleFile)).toBeDefined();

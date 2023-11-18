@@ -30,8 +30,6 @@ export class FindPathsFromDirectoryRecursivelyQueryHandlerImpl
 
     const allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: absoluteDirectoryPath });
 
-    allPaths.push(absoluteDirectoryPath);
-
     return allPaths;
   }
 }

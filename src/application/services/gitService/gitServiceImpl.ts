@@ -15,4 +15,10 @@ export class GitServiceImpl implements GitService {
 
     return currentPathIsGitRepository;
   }
+
+  public async getRepositoryRoot(): Promise<string> {
+    const repositoryRoot = await this.gitClient.revparse(['--show-toplevel']);
+
+    return repositoryRoot;
+  }
 }

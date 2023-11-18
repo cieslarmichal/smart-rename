@@ -4,8 +4,8 @@ import { FindPathsFromGitStageQueryHandler } from './findPathsFromGitStageQueryH
 import { FileSystemService } from '../../services/fileSystemService/fileSystemService.js';
 import { GitRepositoryNotFoundError } from '../../errors/gitRepositoryNotFoundError.js';
 
-export interface ExtractAllRelativePathsPayload {
-  readonly relativeFilePath: string;
+export interface ExtractAllNestedPathsPayload {
+  readonly path: string;
 }
 
 export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitStageQueryHandler {
@@ -21,17 +21,21 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
 
     const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
+    const repositoryRoot = await this.gitService.getRepositoryRoot();
+
     const gitStagedAbsolutePaths = gitStagedRelativeFilePaths
       .map((gitStagedRelativeFilePath) => {
-        const relativePaths = this.extractAllRelativePaths({
-          relativeFilePath: gitStagedRelativeFilePath,
-        });
+        const gitStagedAbsoluteFilePath = resolve(gitStagedRelativeFilePath);
 
-        const absolutePaths = relativePaths.map((relativePath) => resolve(relativePath));
+        console.log({ gitStagedAbsoluteFilePath });
+        const nestedPaths = this.extractAllNestedPaths({ path: gitStagedAbsoluteFilePath });
+        console.log({ nestedPaths });
 
-        const existingPaths = absolutePaths.filter((path) => this.fileSystemService.checkIfPathExists({ path }));
+        const existingPaths = nestedPaths.filter((path) => this.fileSystemService.checkIfPathExists({ path }));
 
-        return existingPaths;
+        const gitRepositoryPaths = existingPaths.filter((path) => path.length > repositoryRoot.length);
+
+        return gitRepositoryPaths;
       })
       .flat();
 
@@ -40,25 +44,29 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
     return gitStagedAbsoluteUniquePaths;
   }
 
-  private extractAllRelativePaths(payload: ExtractAllRelativePathsPayload): string[] {
-    const { relativeFilePath } = payload;
+  private extractAllNestedPaths(payload: ExtractAllNestedPathsPayload): string[] {
+    const { path } = payload;
 
-    const filePathParts = relativeFilePath.split('/');
+    const filePathElements = path.split('/');
 
-    const allRelativePaths: string[] = [];
+    const allNestedPaths: string[] = [];
 
-    for (let i = 0; i < filePathParts.length; i++) {
-      let relativePathParts = [];
+    for (let i = 0; i < filePathElements.length; i++) {
+      let nestedPathElements = [];
 
       for (let j = 0; j <= i; j++) {
-        relativePathParts.push(filePathParts[j]);
+        nestedPathElements.push(filePathElements[j]);
       }
 
-      const relativePath = relativePathParts.join('/');
+      const nestedPath = nestedPathElements.join('/');
 
-      allRelativePaths.push(relativePath);
+      if (!nestedPath.length) {
+        continue;
+      }
+
+      allNestedPaths.push(nestedPath);
     }
 
-    return allRelativePaths;
+    return allNestedPaths;
   }
 }
