@@ -6,6 +6,7 @@ export interface RenamePathsCliCommandOptions {
   readonly from: string;
   readonly to: string;
   readonly includeFilesContents: boolean | undefined;
+  readonly exclude: string[] | undefined;
 }
 
 export type RenamePathsCliCommand = CliCommand<RenamePathsCliCommandOptions>;

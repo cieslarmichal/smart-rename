@@ -8,6 +8,7 @@ import { FindPathsFromDirectoryRecursivelyQueryHandlerImpl } from '../../../appl
 import { FindPathsFromGitStageQueryHandlerImpl } from '../../../application/queryHandlers/findPathsFromGitStageQueryHandler/findPathsFromGitStageQueryHandlerImpl.js';
 import { BaseError } from '../../../application/errors/baseError.js';
 import { ReplaceInFilesContentsCommandHandlerImpl } from '../../../application/commandHandlers/replaceInFilesContentsCommandHandler/replaceInFilesContentsCommandHandlerImpl.js';
+import { resolve } from 'path';
 
 export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
   public readonly command = '$0';
@@ -48,6 +49,13 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
           demandOption: false,
           alias: 'i',
         },
+        exclude: {
+          describe: 'Paths to be excluded from renaming',
+          type: 'array',
+          string: true,
+          demandOption: false,
+          alias: 'e',
+        },
       })
       .usage('Usage: smart-rename [options]');
   }
@@ -70,6 +78,8 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
 
     const includeFilesContents = options.includeFilesContents;
 
+    const excludedPaths = options.exclude;
+
     const fileSystemService = new FileSystemServiceImpl();
 
     const gitClient = GitClientFactory.create();
@@ -87,9 +97,17 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
     const findPathsFromGitStageQueryHandler = new FindPathsFromGitStageQueryHandlerImpl(gitService, fileSystemService);
 
     try {
-      const paths = directoryPath
+      let paths = directoryPath
         ? await findPathsFromDirectoryRecursivelyQueryHandler.execute({ directoryPath })
         : await findPathsFromGitStageQueryHandler.execute();
+
+      if (excludedPaths?.length) {
+        const absoluteExcludePaths = excludedPaths.map((excludedPath) => resolve(excludedPath));
+
+        paths = paths.filter(
+          (path) => absoluteExcludePaths.find((excludedPath) => path.includes(excludedPath)) === undefined,
+        );
+      }
 
       const { changedPaths } = await replaceInPathNamesCommandHandler.execute({ paths, replaceFrom, replaceTo });
 
