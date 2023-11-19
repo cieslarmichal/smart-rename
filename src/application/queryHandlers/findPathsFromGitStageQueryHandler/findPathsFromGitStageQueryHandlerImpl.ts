@@ -32,6 +32,7 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
 
     const gitStagedAbsoluteUniquePaths = [...new Set(gitStagedAbsolutePaths)];
 
+    console.log({ gitStagedAbsoluteUniquePaths });
     return gitStagedAbsoluteUniquePaths;
   }
 
