@@ -1,4 +1,3 @@
-import { resolve } from 'path';
 import { GitService } from '../../services/gitService/gitService.js';
 import { FindPathsFromGitStageQueryHandler } from './findPathsFromGitStageQueryHandler.js';
 import { FileSystemService } from '../../services/fileSystemService/fileSystemService.js';
@@ -21,19 +20,13 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
 
     const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
-    const repositoryRoot = await this.gitService.getRepositoryRoot();
-
     const gitStagedAbsolutePaths = gitStagedRelativeFilePaths
       .map((gitStagedRelativeFilePath) => {
-        const gitStagedAbsoluteFilePath = resolve(gitStagedRelativeFilePath);
-
-        const nestedPaths = this.extractAllNestedPaths({ path: gitStagedAbsoluteFilePath });
+        const nestedPaths = this.extractAllNestedPaths({ path: gitStagedRelativeFilePath });
 
         const existingPaths = nestedPaths.filter((path) => this.fileSystemService.checkIfPathExists({ path }));
 
-        const gitRepositoryPaths = existingPaths.filter((path) => path.length > repositoryRoot.length);
-
-        return gitRepositoryPaths;
+        return existingPaths;
       })
       .flat();
 

@@ -10,7 +10,6 @@ import {
 } from './fileSystemService.js';
 import { existsSync } from 'fs';
 import { readdir, rm, lstat, readFile as readFileAsync, writeFile as writeFileAsync } from 'node:fs/promises';
-import { join } from 'path';
 import { move as asyncMove } from 'fs-extra';
 
 export class FileSystemServiceImpl implements FileSystemService {
@@ -51,12 +50,10 @@ export class FileSystemServiceImpl implements FileSystemService {
 
     await Promise.all(
       relativePaths.map(async (relativePath) => {
-        const absolutePath = join(directoryPath, relativePath);
+        allPaths.push(relativePath);
 
-        allPaths.push(absolutePath);
-
-        if (await this.checkIfPathIsDirectory({ path: absolutePath })) {
-          await this.getAllPathsFromDirectoryHelper(absolutePath, allPaths);
+        if (await this.checkIfPathIsDirectory({ path: relativePath })) {
+          await this.getAllPathsFromDirectoryHelper(relativePath, allPaths);
         } else {
           return;
         }
