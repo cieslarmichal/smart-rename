@@ -40,6 +40,8 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
             pathsFromDirectory.map(async (pathFromDirectory) => {
               const pathSuffix = pathFromDirectory.replace(path, '');
 
+              console.log({ changedPath, pathSuffix });
+
               await this.fileSystemService.move({ fromPath: pathFromDirectory, toPath: join(changedPath, pathSuffix) });
             }),
           );
