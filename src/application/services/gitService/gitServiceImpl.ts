@@ -5,9 +5,11 @@ export class GitServiceImpl implements GitService {
   public constructor(private readonly gitClient: GitClient) {}
 
   public async getStagedFiles(): Promise<string[]> {
-    const { staged } = await this.gitClient.status();
+    const { staged, renamed } = await this.gitClient.status();
 
-    return staged;
+    const renamedPaths = renamed.map((renamedPath) => renamedPath.to);
+
+    return [...staged, ...renamedPaths];
   }
 
   public async checkIfCurrentPathIsGitRepository(): Promise<boolean> {
