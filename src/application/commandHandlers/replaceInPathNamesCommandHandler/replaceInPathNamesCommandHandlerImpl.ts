@@ -15,7 +15,7 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
   ): Promise<ReplaceInPathNamesCommandHandlerResult> {
     const { paths, replaceFrom, replaceTo } = payload;
 
-    CollectionService.sortByLengthDescending({ data: paths });
+    CollectionService.sortByLengthAscending({ data: paths });
 
     console.log({ paths });
 
