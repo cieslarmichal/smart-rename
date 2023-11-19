@@ -34,6 +34,8 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
         if (pathIsDirectory) {
           const pathsFromDirectory = await this.fileSystemService.getPathsFromDirectory({ directoryPath: path });
 
+          console.log({ movedPaths: pathsFromDirectory });
+
           await Promise.all(
             pathsFromDirectory.map(async (pathFromDirectory) => {
               const pathSuffix = pathFromDirectory.replace(path, '');
@@ -41,8 +43,6 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
               await this.fileSystemService.move({ fromPath: pathFromDirectory, toPath: join(changedPath, pathSuffix) });
             }),
           );
-
-          console.log({ movedPaths: pathsFromDirectory });
         }
 
         await this.fileSystemService.remove({ path });
