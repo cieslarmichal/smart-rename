@@ -42,7 +42,10 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
 
               console.log({ changedPath, pathSuffix });
 
-              await this.fileSystemService.move({ fromPath: pathFromDirectory, toPath: join(changedPath, pathSuffix) });
+              await this.fileSystemService.move({
+                fromPath: join(path, pathFromDirectory),
+                toPath: join(changedPath, pathSuffix),
+              });
             }),
           );
         }
