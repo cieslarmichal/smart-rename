@@ -20,7 +20,7 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
 
     const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
-    const gitStagedAbsolutePaths = gitStagedRelativeFilePaths
+    const gitStagedPaths = gitStagedRelativeFilePaths
       .map((gitStagedRelativeFilePath) => {
         const nestedPaths = this.extractAllNestedPaths({ path: gitStagedRelativeFilePath });
 
@@ -30,10 +30,11 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
       })
       .flat();
 
-    const gitStagedAbsoluteUniquePaths = [...new Set(gitStagedAbsolutePaths)];
+    const gitStagedUniquePaths = [...new Set(gitStagedPaths)];
 
-    console.log({ gitStagedAbsoluteUniquePaths });
-    return gitStagedAbsoluteUniquePaths;
+    console.log({ gitStagedUniquePaths });
+
+    return gitStagedUniquePaths;
   }
 
   private extractAllNestedPaths(payload: ExtractAllNestedPathsPayload): string[] {
