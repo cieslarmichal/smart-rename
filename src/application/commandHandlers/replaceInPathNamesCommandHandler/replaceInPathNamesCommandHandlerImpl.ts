@@ -5,7 +5,6 @@ import {
   ReplaceInPathNamesCommandHandlerResult,
 } from './replaceInPathNamesCommandHandler.js';
 import { CollectionService } from '../../services/collectionService/collectionService.js';
-import { readdir } from 'fs/promises';
 
 export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesCommandHandler {
   public constructor(private readonly fileSystemService: FileSystemService) {}
@@ -33,9 +32,6 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
       } else {
         console.log({ movedPath: path });
 
-        const pathContents = await readdir(path);
-
-        console.log({ pathContents });
         await this.fileSystemService.move({ fromPath: path, toPath: changedPath });
       }
 
