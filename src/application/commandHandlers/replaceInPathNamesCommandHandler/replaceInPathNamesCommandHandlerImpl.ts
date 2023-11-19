@@ -17,8 +17,6 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
 
     CollectionService.sortByLengthDescending({ data: paths });
 
-    console.log({ paths });
-
     const changedPaths = new Map<string, string>();
 
     for (const path of paths) {
@@ -34,13 +32,9 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
         if (pathIsDirectory) {
           const pathsFromDirectory = await this.fileSystemService.getPathsFromDirectory({ directoryPath: path });
 
-          console.log({ movedPaths: pathsFromDirectory });
-
           await Promise.all(
             pathsFromDirectory.map(async (pathFromDirectory) => {
               const pathSuffix = pathFromDirectory.replace(path, '');
-
-              console.log({ changedPath, pathSuffix });
 
               await this.fileSystemService.move({
                 fromPath: join(path, pathFromDirectory),
@@ -52,8 +46,6 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
 
         await this.fileSystemService.remove({ path });
       } else {
-        console.log({ movedPath: path });
-
         await this.fileSystemService.move({ fromPath: path, toPath: changedPath });
       }
 

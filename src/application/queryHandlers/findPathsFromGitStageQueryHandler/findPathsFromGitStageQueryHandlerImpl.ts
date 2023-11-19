@@ -32,8 +32,6 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
 
     const gitStagedUniquePaths = [...new Set(gitStagedPaths)];
 
-    console.log({ gitStagedUniquePaths });
-
     return gitStagedUniquePaths;
   }
 
