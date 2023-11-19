@@ -10,7 +10,11 @@ export interface CheckIfPathExistsPayload {
   readonly path: string;
 }
 
-export interface GetAllPathsFromDirectoryPayload {
+export interface GetPathsFromDirectoryPayload {
+  readonly directoryPath: string;
+}
+
+export interface GetPathsFromDirectoryRecursivePayload {
   readonly directoryPath: string;
 }
 
@@ -36,7 +40,8 @@ export interface FileSystemService {
   checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): Promise<boolean>;
   checkIfPathIsFile(payload: CheckIfPathIsFilePayload): Promise<boolean>;
   checkIfPathExists(payload: CheckIfPathExistsPayload): boolean;
-  getAllPathsFromDirectory(payload: GetAllPathsFromDirectoryPayload): Promise<string[]>;
+  getPathsFromDirectory(payload: GetPathsFromDirectoryPayload): Promise<string[]>;
+  getPathsFromDirectoryRecursive(payload: GetPathsFromDirectoryRecursivePayload): Promise<string[]>;
   move(payload: MovePayload): Promise<void>;
   remove(payload: RemovePayload): Promise<void>;
   readFile(payload: ReadFilePayload): Promise<string>;

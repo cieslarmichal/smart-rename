@@ -28,7 +28,9 @@ export class FindPathsFromDirectoryRecursivelyQueryHandlerImpl
       throw new DirectoryNotFoundError({ path: absoluteDirectoryPath });
     }
 
-    const allPaths = await this.fileSystemService.getAllPathsFromDirectory({ directoryPath: absoluteDirectoryPath });
+    const allPaths = await this.fileSystemService.getPathsFromDirectoryRecursive({
+      directoryPath: absoluteDirectoryPath,
+    });
 
     return allPaths;
   }

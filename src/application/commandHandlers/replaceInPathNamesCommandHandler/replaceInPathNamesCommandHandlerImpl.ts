@@ -5,6 +5,7 @@ import {
   ReplaceInPathNamesCommandHandlerResult,
 } from './replaceInPathNamesCommandHandler.js';
 import { CollectionService } from '../../services/collectionService/collectionService.js';
+import { join } from 'path';
 
 export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesCommandHandler {
   public constructor(private readonly fileSystemService: FileSystemService) {}
@@ -14,7 +15,7 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
   ): Promise<ReplaceInPathNamesCommandHandlerResult> {
     const { paths, replaceFrom, replaceTo } = payload;
 
-    CollectionService.sortByLengthAscending({ data: paths });
+    CollectionService.sortByLengthDescending({ data: paths });
 
     console.log({ paths });
 
@@ -28,6 +29,22 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
       const changedPath = path.replaceAll(replaceFrom, replaceTo);
 
       if (this.fileSystemService.checkIfPathExists({ path: changedPath })) {
+        const pathIsDirectory = await this.fileSystemService.checkIfPathIsDirectory({ path });
+
+        if (pathIsDirectory) {
+          const pathsFromDirectory = await this.fileSystemService.getPathsFromDirectory({ directoryPath: path });
+
+          await Promise.all(
+            pathsFromDirectory.map(async (pathFromDirectory) => {
+              const pathSuffix = pathFromDirectory.replace(path, '');
+
+              await this.fileSystemService.move({ fromPath: pathFromDirectory, toPath: join(changedPath, pathSuffix) });
+            }),
+          );
+
+          console.log({ movedPaths: pathsFromDirectory });
+        }
+
         await this.fileSystemService.remove({ path });
       } else {
         console.log({ movedPath: path });

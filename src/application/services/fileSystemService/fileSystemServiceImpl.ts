@@ -2,7 +2,7 @@ import {
   CheckIfPathExistsPayload,
   CheckIfPathIsDirectoryPayload,
   FileSystemService,
-  GetAllPathsFromDirectoryPayload,
+  GetPathsFromDirectoryRecursivePayload,
   MovePayload,
   ReadFilePayload,
   RemovePayload,
@@ -35,7 +35,15 @@ export class FileSystemServiceImpl implements FileSystemService {
     return existsSync(path);
   }
 
-  public async getAllPathsFromDirectory(payload: GetAllPathsFromDirectoryPayload): Promise<string[]> {
+  public async getPathsFromDirectory(payload: GetPathsFromDirectoryRecursivePayload): Promise<string[]> {
+    const { directoryPath } = payload;
+
+    const paths = await readdir(directoryPath);
+
+    return paths;
+  }
+
+  public async getPathsFromDirectoryRecursive(payload: GetPathsFromDirectoryRecursivePayload): Promise<string[]> {
     const { directoryPath } = payload;
 
     const allPaths: string[] = [];
