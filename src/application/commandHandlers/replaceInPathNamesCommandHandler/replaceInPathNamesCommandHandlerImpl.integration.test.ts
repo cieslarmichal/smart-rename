@@ -10,6 +10,7 @@ describe('ReplaceInPathNamesCommandHandlerImpl', () => {
 
   const replaceInPathNamesCommandHandler = new ReplaceInPathNamesCommandHandlerImpl(fileSystemService);
 
+  const rootDirectory = join(__dirname, '..', '..', '..', '..');
   const testDataDirectory = join(__dirname, '..', '..', '..', '..', 'tests1');
 
   const userModuleDirectory = join(testDataDirectory, 'userModule');
@@ -104,6 +105,7 @@ describe('ReplaceInPathNamesCommandHandlerImpl', () => {
       ],
       replaceFrom: 'user',
       replaceTo: 'customer',
+      rootDirectory,
     });
 
     expect(

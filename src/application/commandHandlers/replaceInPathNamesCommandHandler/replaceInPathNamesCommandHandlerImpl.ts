@@ -13,7 +13,7 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
   public async execute(
     payload: ReplaceInPathNamesCommandHandlerPayload,
   ): Promise<ReplaceInPathNamesCommandHandlerResult> {
-    const { paths, replaceFrom, replaceTo } = payload;
+    const { rootDirectory, paths, replaceFrom, replaceTo } = payload;
 
     CollectionService.sortByLengthDescending({ data: paths });
 
@@ -24,9 +24,13 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
         continue;
       }
 
-      const changedPath = path.replaceAll(replaceFrom, replaceTo);
+      const relativePath = path.replace(rootDirectory, '');
 
-      if (this.fileSystemService.checkIfPathExists({ path: changedPath })) {
+      const renamedRelativePath = relativePath.replaceAll(replaceFrom, replaceTo);
+
+      const renamedAbsolutePath = join(rootDirectory, renamedRelativePath);
+
+      if (this.fileSystemService.checkIfPathExists({ path: renamedAbsolutePath })) {
         const pathIsDirectory = await this.fileSystemService.checkIfPathIsDirectory({ path });
 
         if (pathIsDirectory) {
@@ -38,7 +42,7 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
 
               await this.fileSystemService.move({
                 fromPath: join(path, pathFromDirectory),
-                toPath: join(changedPath, pathSuffix),
+                toPath: join(renamedAbsolutePath, pathSuffix),
               });
             }),
           );
@@ -46,10 +50,10 @@ export class ReplaceInPathNamesCommandHandlerImpl implements ReplaceInPathNamesC
 
         await this.fileSystemService.remove({ path });
       } else {
-        await this.fileSystemService.move({ fromPath: path, toPath: changedPath });
+        await this.fileSystemService.move({ fromPath: path, toPath: renamedAbsolutePath });
       }
 
-      changedPaths.set(path, changedPath);
+      changedPaths.set(path, renamedAbsolutePath);
     }
 
     return { changedPaths };

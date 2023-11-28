@@ -109,7 +109,14 @@ export class RenamePathsCliCommandImpl implements RenamePathsCliCommand {
         );
       }
 
-      const { changedPaths } = await replaceInPathNamesCommandHandler.execute({ paths, replaceFrom, replaceTo });
+      let rootDirectory = directoryPath ? directoryPath : await gitService.getRepositoryRoot();
+
+      const { changedPaths } = await replaceInPathNamesCommandHandler.execute({
+        paths,
+        replaceFrom,
+        replaceTo,
+        rootDirectory,
+      });
 
       if (includeFilesContents) {
         const updatedPaths = paths.map((path) => changedPaths.get(path) || path);

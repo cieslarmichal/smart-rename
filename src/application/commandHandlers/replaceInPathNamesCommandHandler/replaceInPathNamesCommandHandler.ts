@@ -1,4 +1,5 @@
 export interface ReplaceInPathNamesCommandHandlerPayload {
+  readonly rootDirectory: string;
   readonly paths: string[];
   readonly replaceFrom: string;
   readonly replaceTo: string;

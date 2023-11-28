@@ -2,6 +2,7 @@ import { GitService } from '../../services/gitService/gitService.js';
 import { FindPathsFromGitStageQueryHandler } from './findPathsFromGitStageQueryHandler.js';
 import { FileSystemService } from '../../services/fileSystemService/fileSystemService.js';
 import { GitRepositoryNotFoundError } from '../../errors/gitRepositoryNotFoundError.js';
+import { join } from 'node:path';
 
 export interface ExtractAllNestedPathsPayload {
   readonly path: string;
@@ -18,6 +19,8 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
       throw new GitRepositoryNotFoundError({ currentWorkingDirectory: __dirname });
     }
 
+    const gitRepositoryRootDirectory = await this.gitService.getRepositoryRoot();
+
     const gitStagedRelativeFilePaths = await this.gitService.getStagedFiles();
 
     const gitStagedPaths = gitStagedRelativeFilePaths
@@ -26,7 +29,11 @@ export class FindPathsFromGitStageQueryHandlerImpl implements FindPathsFromGitSt
 
         const existingPaths = nestedPaths.filter((path) => this.fileSystemService.checkIfPathExists({ path }));
 
-        return existingPaths;
+        const existingAbsolutePaths = existingPaths.map((relativePath) =>
+          join(gitRepositoryRootDirectory, relativePath),
+        );
+
+        return existingAbsolutePaths;
       })
       .flat();
 

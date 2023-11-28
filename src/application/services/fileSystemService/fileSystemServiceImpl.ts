@@ -11,6 +11,7 @@ import {
 import { existsSync } from 'fs';
 import { readdir, rm, lstat, readFile as readFileAsync, writeFile as writeFileAsync } from 'node:fs/promises';
 import { move as asyncMove } from 'fs-extra';
+import { join } from 'path';
 
 export class FileSystemServiceImpl implements FileSystemService {
   public async checkIfPathIsDirectory(payload: CheckIfPathIsDirectoryPayload): Promise<boolean> {
@@ -58,10 +59,11 @@ export class FileSystemServiceImpl implements FileSystemService {
 
     await Promise.all(
       relativePaths.map(async (relativePath) => {
-        allPaths.push(relativePath);
+        const absolutePath = join(directoryPath, relativePath);
+        allPaths.push(absolutePath);
 
-        if (await this.checkIfPathIsDirectory({ path: relativePath })) {
-          await this.getAllPathsFromDirectoryHelper(relativePath, allPaths);
+        if (await this.checkIfPathIsDirectory({ path: absolutePath })) {
+          await this.getAllPathsFromDirectoryHelper(absolutePath, allPaths);
         } else {
           return;
         }
